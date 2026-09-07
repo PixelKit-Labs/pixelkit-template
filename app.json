@@ -1,0 +1,75 @@
+{
+  "expo": {
+    "name": "PixelKit",
+    "slug": "pixelkit",
+    "version": "1.1.17",
+    "orientation": "portrait",
+    "icon": "./assets/icon.png",
+    "userInterfaceStyle": "automatic",
+    "ios": {
+      "supportsTablet": true
+    },
+    "android": {
+      "package": "com.pixelkit.sdk",
+      "adaptiveIcon": {
+        "backgroundColor": "#121316",
+        "foregroundImage": "./assets/android-icon-foreground.png",
+        "backgroundImage": "./assets/android-icon-background.png",
+        "monochromeImage": "./assets/android-icon-monochrome.png"
+      },
+      "permissions": [
+        "android.permission.CAMERA",
+        "android.permission.RECORD_AUDIO",
+        "android.permission.USE_BIOMETRIC",
+        "android.permission.USE_FINGERPRINT",
+        "android.permission.VIBRATE",
+        "android.permission.ACCESS_FINE_LOCATION",
+        "android.permission.ACCESS_COARSE_LOCATION",
+        "android.permission.HIGH_SAMPLING_RATE_SENSORS",
+        "android.permission.BLUETOOTH",
+        "android.permission.BLUETOOTH_ADMIN",
+        "android.permission.BLUETOOTH_SCAN",
+        "android.permission.BLUETOOTH_CONNECT",
+        "android.permission.NFC",
+        "android.permission.WAKE_LOCK",
+        "android.permission.UWB_RANGING",
+        "android.permission.READ_PHONE_STATE"
+      ],
+      "predictiveBackGestureEnabled": true,
+      "versionCode": 46
+    },
+    "web": {
+      "favicon": "./assets/favicon.png"
+    },
+    "plugins": [
+      "expo-secure-store",
+      [
+        "expo-audio",
+        {
+          "microphonePermission": "PixelKit uses the microphone for on-device speech recognition, decibel metering, and Gemini voice sessions."
+        }
+      ],
+      [
+        "expo-build-properties",
+        {
+          "android": {
+            "compileSdkVersion": 36,
+            "targetSdkVersion": 36,
+            "minSdkVersion": 26
+          }
+        }
+      ],
+      "expo-font",
+      "expo-video",
+      [
+        "expo-media-library",
+        {
+          "photosPermission": "PixelKit saves photos and videos you capture to your library.",
+          "savePhotosPermission": "PixelKit saves photos and videos you capture to your library.",
+          "isAccessMediaLocationEnabled": true
+        }
+      ],
+      "expo-asset"
+    ]
+  }
+}

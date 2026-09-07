@@ -1,0 +1,21 @@
+name: verify
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      # typecheck, then parity: every hook the installed SDK exports has a screen that demonstrates
+      # it, and every documented action is reachable from a control.
+      - run: npm run verify
+      - run: npx expo export -p android
