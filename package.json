@@ -11,15 +11,16 @@
   },
   "main": "index.ts",
   "scripts": {
-    "start": "expo start",
-    "android": "expo run:android",
+    "start": "npm run sync-docs && expo start",
+    "android": "npm run sync-docs && expo run:android",
     "web": "expo start --web",
     "typecheck": "tsc --noEmit",
     "parity": "node scripts/check-parity.js",
-    "verify": "npm run typecheck && npm run parity",
+    "verify": "npm run sync-docs && npm run typecheck && npm run parity",
     "doctor": "npx @pixelkit/cli doctor",
     "hilight:build": "powershell -ExecutionPolicy Bypass -File scripts/hilight-daemon/build.ps1",
-    "hilight:daemon": "powershell -ExecutionPolicy Bypass -File scripts/hilight-daemon/run.ps1"
+    "hilight:daemon": "powershell -ExecutionPolicy Bypass -File scripts/hilight-daemon/run.ps1",
+    "sync-docs": "node scripts/sync-docs-data.mjs"
   },
   "dependencies": {
     "@expo-google-fonts/geist": "^0.4.2",

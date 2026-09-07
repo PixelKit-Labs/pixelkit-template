@@ -101,61 +101,58 @@ for (const hook of exportedHooks) {
 }
 
 // 2. Every documented action is reachable from some screen, or waived with a reason.
-// The entries live one file per category under src/screens/docs; docsData.ts only assembles them.
-const docsDir = path.join(ROOT, 'src', 'screens', 'docs');
-const docsData = fs
-  .readdirSync(docsDir)
-  .filter((f) => f.endsWith('.ts') && f !== 'shared.ts')
-  .map((f) => fs.readFileSync(path.join(docsDir, f), 'utf8'))
-  .join(String.fromCharCode(10));
-if (!docsData.includes('actions:')) {
-  failures.push('no documentation entries found under src/screens/docs — the action check would silently pass');
+//
+// The documented surface is no longer written here: it is generated from data/hooks in
+// PixelKit-Labs/pixelkit-docs, which is the contract the SDK checks itself against. This reads that
+// JSON directly rather than the generated TypeScript, because parsing structured data cannot fail
+// the way regexing generated source can - silently matching nothing and passing for the wrong reason.
+const hooksDir = process.env.PIXELKIT_HOOKS_DATA
+  ? path.resolve(process.env.PIXELKIT_HOOKS_DATA)
+  : path.join(ROOT, '.pixelkit-docs', 'data', 'hooks');
+
+if (!fs.existsSync(hooksDir)) {
+  console.error(`Hook definitions not found at ${hooksDir}. Run: npm run sync-docs`);
+  process.exit(1);
 }
-let currentModule = null;
-let inActions = false;
-let inReturns = false;
-for (const line of docsData.split(String.fromCharCode(10))) {
-  const quoted = (text) => {
-    const open = text.indexOf(String.fromCharCode(39));
-    if (open < 0) return null;
-    const close = text.indexOf(String.fromCharCode(39), open + 1);
-    return close < 0 ? null : text.slice(open + 1, close);
-  };
 
-  if (line.startsWith('    id: ')) {
-    currentModule = quoted(line);
-    inActions = false;
-    inReturns = false;
-    continue;
-  }
-  if (line.trim() === 'actions: [') { inActions = true; inReturns = false; continue; }
-  if (line.trim() === 'returns: [') { inReturns = true; inActions = false; continue; }
-  if ((inActions || inReturns) && line === '    ],') { inActions = false; inReturns = false; continue; }
-  if (!currentModule || (!inActions && !inReturns)) continue;
+const modules = fs
+  .readdirSync(hooksDir)
+  .filter((f) => f.endsWith('.json'))
+  .map((f) => JSON.parse(fs.readFileSync(path.join(hooksDir, f), 'utf8')));
 
+if (modules.length === 0) {
+  failures.push('no hook definitions found — the action check would silently pass');
+}
+
+for (const mod of modules) {
   // A setter documented under `returns` is still a function. An unreachable one is how the Gemini
   // Nano system instruction stayed out of the interface while the hook had always exposed it.
-  if (inReturns && !line.includes('=>')) continue;
+  const callables = [
+    ...(mod.actions ?? []),
+    ...(mod.returns ?? []).filter((f) => typeof f.type === 'string' && f.type.includes('=>')),
+  ];
 
-  const isExpandedEntry = line.startsWith('        name: ');
-  const isInlineEntry = line.startsWith('      { name: ');
-  if (!isExpandedEntry && !isInlineEntry) continue;
-  const name = quoted(line);
-  if (!name) continue;
+  for (const entry of callables) {
+    // A documented name may carry its call shape, e.g. "sendMessage(text)" or "a() / b()".
+    const called = String(entry.name)
+      .split('/')
+      .map((part) => part.trim().split('(')[0].trim())
+      .filter(Boolean);
+    if (called.length === 0) continue;
 
-  // A documented name may carry its call shape, e.g. "sendMessage(text)" or "a() / b()".
-  const called = name
-    .split('/')
-    .map((part) => part.trim().split('(')[0].trim())
-    .filter(Boolean);
-  if (called.length === 0) continue;
-
-  const key = currentModule + '.' + called[0];
-  if (WAIVED[key]) { waivedSeen.push(key); continue; }
-  if (!called.some((fn) => allScreens.includes('.' + fn))) {
-    failures.push(key + ' is documented as a function but no screen calls it — wire a control, or add a reason to scripts/parity-waivers.json');
+    const key = mod.id + '.' + called[0];
+    if (WAIVED[key]) {
+      waivedSeen.push(key);
+      continue;
+    }
+    if (!called.some((fn) => allScreens.includes('.' + fn))) {
+      failures.push(
+        key + ' is documented as a function but no screen calls it — wire a control, or add a reason to scripts/parity-waivers.json'
+      );
+    }
   }
 }
+
 
 // 3. Every setter a hook returns is documented. The Gemini Nano system instruction sat in the
 // hook, undocumented and therefore unnoticed, while the interface offered three of its twelve
@@ -170,9 +167,13 @@ for (const dir of HOOK_DIRS) {
     const returned = src.slice(start);
     const setters = [...new Set([...returned.matchAll(new RegExp('\\bset[A-Z]\\w*', 'g'))].map((m) => m[0]))];
     for (const setter of setters) {
-      if (!mentions(docsData, setter)) {
+      const mod = modules.find((m) => m.id === file.replace('.ts', ''));
+      const documented = mod
+        ? JSON.stringify([...(mod.returns ?? []), ...(mod.actions ?? [])])
+        : '';
+      if (!mentions(documented, setter)) {
         failures.push(
-          file.replace('.ts', '') + ' returns ' + setter + ' but no documentation entry mentions it — document it in src/screens/docs, or it will stay out of the interface unnoticed',
+          file.replace('.ts', '') + ' returns ' + setter + ' but no documentation entry mentions it — document it in data/hooks in pixelkit-docs, or it will stay out of the interface unnoticed',
         );
       }
     }

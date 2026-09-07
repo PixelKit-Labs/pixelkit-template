@@ -9,3 +9,7 @@ ios/
 .env.local
 *.tgz
 scripts/hilight-daemon/build/
+
+# Generated from the documentation contract; run scripts/sync-docs-data.mjs
+src/screens/docsGenerated.ts
+.pixelkit-docs/
