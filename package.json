@@ -69,6 +69,6 @@
     "cross-env": "^10.1.0",
     "expo-mcp": "~0.2.1",
     "react-grab": "^0.2.0",
-    "typescript": "~6.0.3"
+    "typescript": "~7.0.2"
   }
 }
