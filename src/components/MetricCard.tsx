@@ -8,7 +8,7 @@
 import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import { Colors, Fonts, Radius, Type } from '../theme/colors';
-import type { TelemetrySource } from 'pixelkit';
+import type { TelemetrySource } from '@pixelkit-labs/sdk';
 
 export interface MetricCardProps {
   title: string;

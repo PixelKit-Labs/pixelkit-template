@@ -10,9 +10,9 @@
 
 import React, { useState } from 'react';
 import { KeyboardAvoidingView, Platform } from 'react-native';
-import { HapticEnvelopes, useGemini, useHaptics, useHiLight, useSpeech, useSpeechAI, useTPU } from 'pixelkit';
+import { HapticEnvelopes, useGemini, useHaptics, useHiLight, useSpeech, useSpeechAI, useTPU } from '@pixelkit-labs/sdk';
 import { ScreenHeader, SectionTabs } from '../components/ScreenScaffold';
-import { useGeminiNano, useGenAITasks, useNaturalLanguageAI, useVisionAI } from 'pixelkit/mlkit';
+import { useGeminiNano, useGenAITasks, useNaturalLanguageAI, useVisionAI } from '@pixelkit-labs/sdk/mlkit';
 import { sectionsFor } from '../core/surface';
 import { styles } from './ailab/styles';
 import { ChatSection } from './ailab/ChatSection';

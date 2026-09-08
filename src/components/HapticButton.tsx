@@ -7,7 +7,7 @@
 
 import React from 'react';
 import { Pressable, Text, StyleSheet, View, ViewStyle, TextStyle, StyleProp } from 'react-native';
-import { HapticType, useHaptics } from 'pixelkit';
+import { HapticType, useHaptics } from '@pixelkit-labs/sdk';
 import { Colors, Fonts, Radius } from '../theme/colors';
 
 /** `primary` and `cta` are solid accent; `secondary` and `outline` are outlined; `danger` is solid red. */

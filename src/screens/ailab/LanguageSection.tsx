@@ -8,12 +8,12 @@
 
 import React, { useState } from 'react';
 import { View, Text, ScrollView, TextInput, TouchableOpacity, ActivityIndicator } from 'react-native';
-import { useHaptics } from 'pixelkit';
+import { useHaptics } from '@pixelkit-labs/sdk';
 import { Colors } from '../../theme/colors';
 import { HapticButton } from '../../components/HapticButton';
 import { MetricCard } from '../../components/MetricCard';
 import { SectionHeader, StatChip } from '../../components/Decor';
-import { useNaturalLanguageAI } from 'pixelkit/mlkit';
+import { useNaturalLanguageAI } from '@pixelkit-labs/sdk/mlkit';
 import { styles } from './styles';
 
 type NLPDemoKind = 'translate' | 'langid' | 'smartreply' | 'entities';

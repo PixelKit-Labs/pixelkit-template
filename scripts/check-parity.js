@@ -31,7 +31,7 @@ const TAB_SOURCES = {
  * npm. The parity check reads the installed copy's sources, which ship in the tarball precisely
  * so this check can run against exactly the version the app resolves.
  */
-const LIB = path.join('node_modules', 'pixelkit');
+const LIB = path.join('node_modules', '@pixelkit-labs/sdk');
 
 const read = (file) => fs.readFileSync(path.join(ROOT, file), 'utf8');
 
@@ -73,7 +73,7 @@ for (const m of surface.matchAll(/^ {2}(use\w+): \{ tab: '(\w+)', section: '(\w+
   homes[m[1]] = { tab: m[2], section: m[3] };
 }
 
-// The package has two entry points: 'pixelkit' and 'pixelkit/mlkit'. A hook is public if either
+// The package has two entry points: '@pixelkit-labs/sdk' and '@pixelkit-labs/sdk/mlkit'. A hook is public if either
 // exports it, so both are read. Comments are stripped first, or a hook merely *mentioned* in a note
 // would count as exported.
 const stripComments = (s) => s.replace(/\/\*[\s\S]*?\*\//g, '').replace(/^\s*\/\/.*$/gm, '');
@@ -202,8 +202,8 @@ for (const dir of HOOK_DIRS) {
     if (WAIVED.internal && WAIVED.internal.includes(hook)) continue;
     if (!mentions(indexSrc, hook)) {
       failures.push(
-        `${hook} exists in ${LIB}/src/${dir} but is exported from neither 'pixelkit' nor ` +
-          `'pixelkit/mlkit', so nothing can import it. Export it, or list it under "internal" in ` +
+        `${hook} exists in ${LIB}/src/${dir} but is exported from neither '@pixelkit-labs/sdk' nor ` +
+          `'@pixelkit-labs/sdk/mlkit', so nothing can import it. Export it, or list it under "internal" in ` +
           `scripts/parity-waivers.json.`
       );
     }

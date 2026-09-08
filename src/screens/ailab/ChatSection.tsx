@@ -10,11 +10,11 @@
 import React, { useState } from 'react';
 import { View, Text, ScrollView, TextInput, TouchableOpacity, ActivityIndicator } from 'react-native';
 import { HarmBlockThreshold } from '@google/genai';
-import { saveApiKey, useGemini, useHaptics, useSpeechAI, type AIMessage, type SafetyThreshold } from 'pixelkit';
+import { saveApiKey, useGemini, useHaptics, useSpeechAI, type AIMessage, type SafetyThreshold } from '@pixelkit-labs/sdk';
 import { Colors } from '../../theme/colors';
 import { HapticButton } from '../../components/HapticButton';
 import { StatChip } from '../../components/Decor';
-import { useGeminiNano } from 'pixelkit/mlkit';
+import { useGeminiNano } from '@pixelkit-labs/sdk/mlkit';
 import { styles } from './styles';
 
 /** Threshold choices exposed for HarmCategory blocking; 'default' leaves the API defaults in place. */

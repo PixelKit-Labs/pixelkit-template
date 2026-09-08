@@ -9,13 +9,13 @@
 
 import React, { useEffect, useState } from 'react';
 import { View, Text, ScrollView } from 'react-native';
-import PixelNative, { type AppFunctionInfo } from '@pixelkit/native';
-import { useHaptics, useHiLight } from 'pixelkit';
+import PixelNative, { type AppFunctionInfo } from '@pixelkit-labs/native';
+import { useHaptics, useHiLight } from '@pixelkit-labs/sdk';
 import { Colors, Fonts } from '../../theme/colors';
 import { HapticButton } from '../../components/HapticButton';
 import { MetricCard } from '../../components/MetricCard';
 import { SectionHeader, StatChip } from '../../components/Decor';
-import { useGenAITasks } from 'pixelkit/mlkit';
+import { useGenAITasks } from '@pixelkit-labs/sdk/mlkit';
 import { styles } from './styles';
 
 export const AgentsSection: React.FC<{

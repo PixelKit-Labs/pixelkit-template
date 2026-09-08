@@ -16,7 +16,7 @@ import { AILabScreen } from './src/screens/AILabScreen';
 import { SensorsLabScreen } from './src/screens/SensorsLabScreen';
 import { DocsScreen } from './src/screens/DocsScreen';
 import { Scrims, Wordmark } from './src/components/Decor';
-import { useHaptics } from 'pixelkit';
+import { useHaptics } from '@pixelkit-labs/sdk';
 import { Colors, Fonts } from './src/theme/colors';
 
 type Tab = 'dashboard' | 'ai' | 'sensors' | 'docs';

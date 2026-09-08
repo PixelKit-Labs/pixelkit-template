@@ -4,7 +4,7 @@ updates:
   # The SDK is a dependency here, so this is how SDK releases reach the template: npm publishes,
   # Dependabot opens a pull request, and CI decides whether it is safe.
   #
-  # That CI run is the point. `npm run verify` runs the parity check against node_modules/pixelkit,
+  # That CI run is the point. `npm run verify` runs the parity check against node_modules/@pixelkit-labs/sdk,
   # so a hook the new SDK exports with nowhere to try it in this app FAILS the pull request. A new
   # capability cannot land here silently undemonstrated - it lands as a red build with the hook
   # named.
@@ -14,13 +14,12 @@ updates:
       interval: daily
     open-pull-requests-limit: 5
     groups:
-      # The three publish in lockstep and pixelkit pins the other two exactly, so they must move
+      # The three publish in lockstep and @pixelkit-labs/sdk pins the other two exactly, so they must move
       # together. Ungrouped, Dependabot would open three pull requests for one release and two of
       # them would fail to resolve.
       pixelkit:
         patterns:
-          - pixelkit
-          - '@pixelkit/*'
+          - '@pixelkit-labs/*'
     commit-message:
       prefix: deps
     labels:

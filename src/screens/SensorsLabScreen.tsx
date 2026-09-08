@@ -12,7 +12,7 @@ import React, { useState } from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import { CameraView } from 'expo-camera';
 import { VideoView } from 'expo-video';
-import { HapticEnvelopes, useAudio, useBLE, useBiometrics, useCamera, useCapabilities, useHaptics, useHiLight, useLocation, useMediaLibrary, useNFC, useRadios, useSecurity, useSensors, useTorch, useUWB, useVideo } from 'pixelkit';
+import { HapticEnvelopes, useAudio, useBLE, useBiometrics, useCamera, useCapabilities, useHaptics, useHiLight, useLocation, useMediaLibrary, useNFC, useRadios, useSecurity, useSensors, useTorch, useUWB, useVideo } from '@pixelkit-labs/sdk';
 import { Colors, Type } from '../theme/colors';
 import { HapticButton } from '../components/HapticButton';
 import { MetricCard } from '../components/MetricCard';

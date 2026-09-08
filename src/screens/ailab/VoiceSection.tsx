@@ -9,7 +9,7 @@
 
 import React, { useState } from 'react';
 import { View, Text, ScrollView, TouchableOpacity, ActivityIndicator } from 'react-native';
-import { useHaptics, useSpeech, useSpeechAI } from 'pixelkit';
+import { useHaptics, useSpeech, useSpeechAI } from '@pixelkit-labs/sdk';
 import { Colors } from '../../theme/colors';
 import { HapticButton } from '../../components/HapticButton';
 import { MetricCard } from '../../components/MetricCard';

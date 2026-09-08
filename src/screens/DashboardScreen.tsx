@@ -11,14 +11,14 @@
 
 import React, { useState } from 'react';
 import { View, Text, StyleSheet, Platform } from 'react-native';
-import { resetObservability, useADPF, useCPU, useCapabilities, useCellular, useDevice, useDisplay, useGPU, useMemory, useNetwork, useObservability, useTPU } from 'pixelkit';
+import { resetObservability, useADPF, useCPU, useCapabilities, useCellular, useDevice, useDisplay, useGPU, useMemory, useNetwork, useObservability, useTPU } from '@pixelkit-labs/sdk';
 import { Chip, Reactor, SectionHeader, TelemetryRow } from '../components/Decor';
 import { Colors, Type } from '../theme/colors';
 import { HapticButton } from '../components/HapticButton';
 import { MetricCard } from '../components/MetricCard';
 import { ScreenScaffold } from '../components/ScreenScaffold';
 import { resolveMode } from '../theme/mode';
-import { isPixelNativeAvailable } from '@pixelkit/native';
+import { isPixelNativeAvailable } from '@pixelkit-labs/native';
 import { sectionsFor } from '../core/surface';
 
 const fmt = (v: number | null | undefined, digits = 0) => (v == null ? null : Number(v.toFixed(digits)));

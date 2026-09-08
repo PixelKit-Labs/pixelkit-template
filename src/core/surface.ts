@@ -11,7 +11,7 @@
  * `home` is where it is demonstrated and where the Docs tab points the reader.
  */
 
-import type { SurfaceSection } from 'pixelkit';
+import type { SurfaceSection } from '@pixelkit-labs/sdk';
 export type { SurfaceSection };
 
 /** Top-level tabs, matching `App.tsx`. */

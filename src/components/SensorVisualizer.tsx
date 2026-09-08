@@ -8,7 +8,7 @@
 
 import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
-import { Vector3D } from 'pixelkit';
+import { Vector3D } from '@pixelkit-labs/sdk';
 import { Colors } from '../theme/colors';
 
 /**

@@ -4,7 +4,7 @@ This file is the single source of truth for any coding agent (Claude, Gemini, An
 
 ## Project
 
-PixelKit is an Expo SDK 57 / React Native 0.86 hardware and AI framework for the Google Pixel 11 Pro (Android 17, Tensor G6). Hardware access goes through the `pixelkit` SDK, installed from npm, which wraps two Kotlin Expo Modules: `@pixelkit/native` (telemetry and actuators) and `@pixelkit/mlkit` (Gemini Nano via ML Kit GenAI on AICore). Cloud AI uses `@google/genai` on `gemini-3.8-flash`. The app has four tabs — Silicon, AI Lab, Sensors, Docs — each divided into the sections declared in `src/core/surface.ts`, which is also where every hook declares the one screen that demonstrates it.
+PixelKit is an Expo SDK 57 / React Native 0.86 hardware and AI framework for the Google Pixel 11 Pro (Android 17, Tensor G6). Hardware access goes through the `pixelkit` SDK, installed from npm, which wraps two Kotlin Expo Modules: `@pixelkit-labs/native` (telemetry and actuators) and `@pixelkit-labs/mlkit` (Gemini Nano via ML Kit GenAI on AICore). Cloud AI uses `@google/genai` on `gemini-3.8-flash`. The app has four tabs — Silicon, AI Lab, Sensors, Docs — each divided into the sections declared in `src/core/surface.ts`, which is also where every hook declares the one screen that demonstrates it.
 
 Device facts come from the hardware, read with `adb` and `dumpsys`. Do not restate marketing claims (process node, brightness figures, "post-quantum") as facts in code or comments.
 
@@ -15,7 +15,7 @@ Device facts come from the hardware, read with `adb` and `dumpsys`. Do not resta
 3. **Nothing is simulated.** Every hook exposes `source: 'hardware' | 'derived' | 'unavailable'` (`pixelkit`). There is deliberately no `simulated` member: the type makes fabricated readings unrepresentable. A value that cannot be read is `null`, renders as "—", and its capability reports `unavailable` so the control refuses rather than pretending. Never substitute a plausible default. If a feature cannot be driven for real, either write the real path (native module, daemon, platform API) or report it as unavailable; do not ship a placeholder.
 4. **Comments state facts.** JSDoc and comments describe what the code does and which Android API it uses. No marketing language.
 5. **Design system.** Use tokens from `src/theme/colors.ts` and primitives from `src/components/Decor.tsx`. One accent (cyan) for interaction; green = well, red = wrong, amber = a human or tool must act, violet = the model or external streams. Geist for language, Geist Mono for numbers and labels. Panels use wash + hairline + specular, no shadows or gradient fills. Buttons are solid (one per group) or outlined. Only the reactor glows.
-6. **Single import.** Hooks come from `pixelkit`, and the four ML Kit hooks from `pixelkit/mlkit`. Never reach into `node_modules`. Components and theme are local to this repository and imported by relative path.
+6. **Single import.** Hooks come from `pixelkit`, and the four ML Kit hooks from `@pixelkit-labs/sdk/mlkit`. Never reach into `node_modules`. Components and theme are local to this repository and imported by relative path.
 7. **Haptics on every touchable** via `HapticButton` or `useHaptics`.
 8. **Secrets** go through `useSecurity().saveSecureItem()` or `saveApiKey()` (SecureStore, hardware-backed Android Keystore). Never in plaintext storage.
 9. **Coordinate with other agents.** Run `git status` and `git log --oneline -5` before editing; another agent may have committed. Prefer targeted edits over whole-file rewrites on files touched recently by others.
@@ -50,11 +50,11 @@ src/core/surface.ts          tabs, sections and the one screen that demonstrates
 src/screens/                 Silicon, AI Lab, Sensors, Docs
 src/components/              ScreenScaffold, HapticButton, MetricCard, SensorVisualizer, Decor
 src/theme/                   colors (tokens), mode (state -> colour)
-scripts/check-parity.js      reads node_modules/pixelkit, so it checks the published package
+scripts/check-parity.js      reads node_modules/@pixelkit-labs/sdk, so it checks the published package
 docs/                        using this template, privacy, store listing
 ```
 
-Hooks come from `pixelkit` and `pixelkit/mlkit`. Components and theme are local: the SDK ships
+Hooks come from `pixelkit` and `@pixelkit-labs/sdk/mlkit`. Components and theme are local: the SDK ships
 no UI, so this app owns how a `source` value is rendered. `MetricCard` is the reference for that,
 and showing an unreadable value as an em dash rather than a number is the whole point of it.
 

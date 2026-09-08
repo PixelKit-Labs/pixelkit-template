@@ -12,7 +12,7 @@ import React from 'react';
 import { View, Text, StyleSheet, ScrollView, RefreshControl, StyleProp, ViewStyle } from 'react-native';
 import { Colors, Type, Radius } from '../theme/colors';
 import { HapticButton } from './HapticButton';
-import type { SurfaceSection } from 'pixelkit';
+import type { SurfaceSection } from '@pixelkit-labs/sdk';
 
 export interface ScreenScaffoldProps {
   /** Screen name, e.g. "Sensors". */
