@@ -47,28 +47,29 @@ installed, whether the native packages resolved, and whether AICore is present f
 | `scripts/check-parity.js` | Fails the build if a hook has no home, or a documented action no control |
 
 The hooks themselves are not here. They come from
-[`pixelkit`](https://github.com/PixelKit-Labs/pixelkit-sdk), installed from npm.
+[`@pixelkit-labs/sdk`](https://github.com/PixelKit-Labs/pixelkit-sdk), installed from npm.
 
 ## The rule this app exists to demonstrate
 
 Every hook returns `source: 'hardware' | 'derived' | 'unavailable'`. There is deliberately no
 `simulated` member, so a fabricated reading cannot be represented.
 
-**The SDK ships no UI, so rendering that honestly is this app's job.** `MetricCard` is the reference:
-a `null` value renders as an em dash and the control that depends on it refuses, rather than showing
-a number nobody measured. If you replace the components, keep that behaviour — it is the only part
-of this template that matters more than how it looks.
+**The SDK exports reference components, and this app carries its own editable copies.** That is
+deliberate: a template you cannot change is not a template. `MetricCard` here is the reference for
+rendering provenance honestly: a `null` value renders as an em dash and the control that depends
+on it refuses, rather than showing a number nobody measured. If you replace the components, keep
+that behaviour — it is the only part of this template that matters more than how it looks.
 
 ## Adding a hook
 
 `npm run verify` enforces the loop:
 
-1. Import it from `pixelkit`
+1. Import it from `@pixelkit-labs/sdk`
 2. Give it a home in `src/core/surface.ts` — a tab and a section
 3. Call it from that screen
 4. Document it in `src/screens/docs/`
 
-The parity check reads the *installed* `pixelkit`, so it verifies against the published package
+The parity check reads the *installed* `@pixelkit-labs/sdk`, so it verifies against the published package
 rather than a local copy. A hook the SDK exports with nowhere to try it fails the build.
 
 ## Renaming it
