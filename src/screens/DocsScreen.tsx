@@ -309,14 +309,13 @@ export const DocsScreen: React.FC = () => {
                       <Text style={[styles.blockLabel, styles.blockSpaced]}>SIGNATURE</Text>
                       <Text style={styles.signatureValue}>{mod.signature}</Text>
 
-                      {/* Inputs */}
-                      <Text style={[styles.blockLabel, styles.blockSpaced]}>
-                        {mod.params.length === 0 ? 'INPUTS · none' : 'INPUTS'}
-                      </Text>
-                      {mod.params.length === 0 ? (
-                        <Text style={styles.noneText}>Takes no arguments.</Text>
-                      ) : (
-                        mod.params.map((p) => <FieldRow key={p.name} field={p} />)
+                      {/* Inputs, only when the hook takes any. A section that exists to say
+                          "nothing here" is noise on 30 of the 32 entries. */}
+                      {mod.params.length > 0 && (
+                        <>
+                          <Text style={[styles.blockLabel, styles.blockSpaced]}>INPUTS</Text>
+                          {mod.params.map((p) => <FieldRow key={p.name} field={p} />)}
+                        </>
                       )}
 
                       {/* Returns */}
@@ -697,12 +696,6 @@ const styles = StyleSheet.create({
     ...Type.mono,
     color: Colors.dark.primary,
     marginTop: 8,
-  },
-  noneText: {
-    ...Type.caption,
-    color: Colors.dark.textMuted,
-    marginTop: 8,
-    fontStyle: 'italic',
   },
 
   /** One documented field. */
