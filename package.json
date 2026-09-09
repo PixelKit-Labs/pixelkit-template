@@ -2,7 +2,7 @@
   "name": "pixelkit-template",
   "version": "1.3.0",
   "private": true,
-  "description": "Start an Expo app on Google Pixel hardware. Four tabs demonstrating all 32 PixelKit hooks on a real device.",
+  "description": "Start an Expo app on Google Pixel hardware. Four tabs demonstrating all 39 PixelKit hooks on a real device.",
   "license": "MIT",
   "author": "Traves Theberge",
   "repository": {

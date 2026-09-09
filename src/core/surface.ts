@@ -2,7 +2,7 @@
  * @file surface.ts
  * @description Where every hook lives in the app. One home each, named once.
  *
- * The Docs tab documents all 32 hooks; this map is what guarantees each one is also *reachable* —
+ * The Docs tab documents all 39 hooks; this map is what guarantees each one is also *reachable* —
  * a screen, a section within it, and the line the section header shows. `scripts/check-parity.js`
  * reads this file and the screen sources and fails when a hook has no home, when its home screen
  * does not actually call it, or when a documented action is not wired to a control.

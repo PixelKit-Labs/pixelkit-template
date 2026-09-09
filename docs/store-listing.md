@@ -62,7 +62,7 @@ object detection, pose, segmentation and handwriting — all local. Cloud Gemini
 but only if you supply your own API key, and the interface always says which one answered.
 
 DOCUMENTATION IN THE APP
-All 32 hooks documented on the device: what each argument means, what every returned field means,
+All 39 hooks documented on the device: what each argument means, what every returned field means,
 what each function gives back and what a failure looks like. Each entry says which screen
 demonstrates it.
 

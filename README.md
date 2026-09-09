@@ -5,7 +5,7 @@
 <h1 align="center">PixelKit Template</h1>
 
 <p align="center">
-  A working Expo app on Google Pixel hardware. Four tabs, all 32 PixelKit hooks, running against
+  A working Expo app on Google Pixel hardware. Four tabs, all 39 PixelKit hooks, running against
   the real device.
   <br><br>
   Press <strong>Use this template</strong>, build it onto your phone, and start deleting what you

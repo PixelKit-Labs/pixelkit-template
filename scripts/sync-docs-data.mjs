@@ -3,7 +3,7 @@
  * @file sync-docs-data.mjs
  * @description Generates the in-app Docs tab content from the documentation repository.
  *
- * The 32 hook entries used to be written by hand here, in `src/screens/docs/*.ts`, and again as
+ * The 39 hook entries used to be written by hand here, in `src/screens/docs/*.ts`, and again as
  * prose in the documentation. Two copies of the same 460 fields, kept in step by discipline alone.
  * PixelKit-Labs/pixelkit-docs is the contract now - the SDK's CI fails if its `data/hooks/*.json`
  * disagrees with the code - so this app reads that same data rather than restating it.

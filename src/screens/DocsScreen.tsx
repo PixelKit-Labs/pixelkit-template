@@ -310,7 +310,7 @@ export const DocsScreen: React.FC = () => {
                       <Text style={styles.signatureValue}>{mod.signature}</Text>
 
                       {/* Inputs, only when the hook takes any. A section that exists to say
-                          "nothing here" is noise on 30 of the 32 entries. */}
+                          "nothing here" is noise on hooks without inputs. */}
                       {mod.params.length > 0 && (
                         <>
                           <Text style={[styles.blockLabel, styles.blockSpaced]}>INPUTS</Text>
