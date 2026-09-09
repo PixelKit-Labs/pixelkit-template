@@ -29,5 +29,10 @@
   "useTPU.benchmarkTPU": "wired on the Silicon compute section",
   "useHiLight.setColor": "the pulse and alert controls set colour themselves",
   "useHiLight.setMode": "set through the pulse, alert and toggle controls",
-  "useHiLight.turnOff": "toggle covers both directions"
+  "useHiLight.turnOff": "toggle covers both directions",
+  "useAppFunctions.registerFunction": "app functions are published statically via service declaration and manifest",
+  "useAppFunctions.unregisterFunction": "lifecycle unregistration helper for callers, not a demo button",
+  "usePerfetto.beginSection": "developer instrumentation marker for profiling blocks, not an interactive button",
+  "usePerfetto.endSection": "developer instrumentation marker for profiling blocks, not an interactive button",
+  "usePerfetto.setCounter": "developer instrumentation counter for profiling tracks, not an interactive button"
 }

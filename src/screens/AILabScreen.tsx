@@ -10,7 +10,7 @@
 
 import React, { useState } from 'react';
 import { KeyboardAvoidingView, Platform } from 'react-native';
-import { HapticEnvelopes, useGemini, useHaptics, useHiLight, useSpeech, useSpeechAI, useTPU } from '@pixelkit-labs/sdk';
+import { HapticEnvelopes, useAppFunctions, useGemini, useHaptics, useHiLight, useSpeech, useSpeechAI, useTPU } from '@pixelkit-labs/sdk';
 import { ScreenHeader, SectionTabs } from '../components/ScreenScaffold';
 import { useGeminiNano, useGenAITasks, useNaturalLanguageAI, useVisionAI } from '@pixelkit-labs/sdk/mlkit';
 import { sectionsFor } from '../core/surface';
@@ -35,6 +35,7 @@ export const AILabScreen: React.FC = () => {
   const tpu = useTPU();
   const hilight = useHiLight();
   const haptics = useHaptics();
+  const appFunctions = useAppFunctions();
 
   const [activeTab, setActiveTab] = useState<AILabTab>('chat');
   const [engine, setEngine] = useState<'cloud' | 'nano'>('cloud');
@@ -116,7 +117,7 @@ export const AILabScreen: React.FC = () => {
         />
       )}
 
-      {activeTab === 'agents' && <AgentsSection hilight={hilight} haptics={haptics} genaiTasks={genaiTasks} />}
+      {activeTab === 'agents' && <AgentsSection hilight={hilight} haptics={haptics} genaiTasks={genaiTasks} appFunctions={appFunctions} />}
     </KeyboardAvoidingView>
   );
 };

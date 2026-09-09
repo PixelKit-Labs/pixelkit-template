@@ -16,7 +16,7 @@ import { AILabScreen } from './src/screens/AILabScreen';
 import { SensorsLabScreen } from './src/screens/SensorsLabScreen';
 import { DocsScreen } from './src/screens/DocsScreen';
 import { Scrims, Wordmark } from './src/components/Decor';
-import { useHaptics } from '@pixelkit-labs/sdk';
+import { PixelKitDevTools, useHaptics } from '@pixelkit-labs/sdk';
 import { Colors, Fonts } from './src/theme/colors';
 
 type Tab = 'dashboard' | 'ai' | 'sensors' | 'docs';
@@ -54,6 +54,8 @@ function Shell() {
         {currentTab === 'sensors' && <SensorsLabScreen />}
         {currentTab === 'docs' && <DocsScreen />}
       </View>
+
+      <PixelKitDevTools />
 
       <View style={[styles.navWrapper, { paddingBottom: Math.max(insets.bottom, 10) }]}>
         <View style={styles.navBar}>

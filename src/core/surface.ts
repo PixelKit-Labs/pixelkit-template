@@ -75,6 +75,8 @@ export const HOOK_HOMES: Record<string, HookHome> = {
   // Silicon · network
   useNetwork: { tab: 'silicon', section: 'network' },
   useCellular: { tab: 'silicon', section: 'network' },
+  // Silicon · trace
+  usePerfetto: { tab: 'silicon', section: 'trace' },
   // AI Lab
   useGemini: { tab: 'ai', section: 'chat' },
   useGeminiNano: { tab: 'ai', section: 'chat' },
@@ -83,22 +85,28 @@ export const HOOK_HOMES: Record<string, HookHome> = {
   useNaturalLanguageAI: { tab: 'ai', section: 'language' },
   useSpeechAI: { tab: 'ai', section: 'voice' },
   useSpeech: { tab: 'ai', section: 'voice' },
+  useAppFunctions: { tab: 'ai', section: 'agents' },
   // Sensors
   useSensors: { tab: 'sensors', section: 'motion' },
+  useHealthConnect: { tab: 'sensors', section: 'motion' },
   useCamera: { tab: 'sensors', section: 'capture' },
+  useCameraExtensions: { tab: 'sensors', section: 'capture' },
   useVideo: { tab: 'sensors', section: 'capture' },
   useMediaLibrary: { tab: 'sensors', section: 'capture' },
   useAudio: { tab: 'sensors', section: 'audio' },
+  useSpatialAudio: { tab: 'sensors', section: 'audio' },
   useHaptics: { tab: 'sensors', section: 'actuators' },
   useTorch: { tab: 'sensors', section: 'actuators' },
   useHiLight: { tab: 'sensors', section: 'actuators' },
   useBLE: { tab: 'sensors', section: 'radios' },
+  useChannelSounding: { tab: 'sensors', section: 'radios' },
   useNFC: { tab: 'sensors', section: 'radios' },
   useUWB: { tab: 'sensors', section: 'radios' },
   useRadios: { tab: 'sensors', section: 'radios' },
   useLocation: { tab: 'sensors', section: 'radios' },
   useBiometrics: { tab: 'sensors', section: 'security' },
   useSecurity: { tab: 'sensors', section: 'security' },
+  usePlayIntegrity: { tab: 'sensors', section: 'security' },
 };
 
 /** Section metadata for a tab id, or an empty list for a tab without sections. */

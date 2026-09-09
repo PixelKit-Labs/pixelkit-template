@@ -12,7 +12,30 @@ import React, { useState } from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import { CameraView } from 'expo-camera';
 import { VideoView } from 'expo-video';
-import { HapticEnvelopes, useAudio, useBLE, useBiometrics, useCamera, useCapabilities, useHaptics, useHiLight, useLocation, useMediaLibrary, useNFC, useRadios, useSecurity, useSensors, useTorch, useUWB, useVideo } from '@pixelkit-labs/sdk';
+import {
+  HapticEnvelopes,
+  useAudio,
+  useBLE,
+  useBiometrics,
+  useCamera,
+  useCameraExtensions,
+  useCapabilities,
+  useChannelSounding,
+  useHaptics,
+  useHealthConnect,
+  useHiLight,
+  useLocation,
+  useMediaLibrary,
+  useNFC,
+  usePlayIntegrity,
+  useRadios,
+  useSecurity,
+  useSensors,
+  useSpatialAudio,
+  useTorch,
+  useUWB,
+  useVideo,
+} from '@pixelkit-labs/sdk';
 import { Colors, Type } from '../theme/colors';
 import { HapticButton } from '../components/HapticButton';
 import { MetricCard } from '../components/MetricCard';
@@ -46,9 +69,10 @@ export const SensorsLabScreen: React.FC = () => {
   );
 };
 
-/** The IMU, magnetometer, barometer and light sensor, streaming at 10 Hz. */
+/** The IMU, magnetometer, barometer, light sensor, and Health Connect vitals. */
 const MotionSection: React.FC = () => {
   const sensors = useSensors(100);
+  const health = useHealthConnect();
 
   return (
     <View>
@@ -94,6 +118,21 @@ const MotionSection: React.FC = () => {
         subtitle={sensors.error ?? 'vectors read zero until the first real sample arrives — that is not stillness'}
         source={sensors.source}
       />
+
+      <SectionHeader title="Health Connect & Vitals" hint={health.isAvailable ? 'API 34+ active' : 'provider unavailable'} />
+      <MetricCard
+        title="Hardware Vitals"
+        value={health.isAvailable ? (health.hasStepCounter ? 'Step sensor active' : 'Health Connect ready') : null}
+        badge={health.isAvailable ? 'HEALTH CONNECT' : 'UNAVAILABLE'}
+        badgeColor={health.isAvailable ? Colors.dark.success : Colors.dark.warning}
+        subtitle={
+          health.isAvailable
+            ? `Status: ${health.sdkStatus} · Steps: ${health.stepSensorName ?? 'Present'} · Heart rate: ${health.hasHeartRateSensor ? 'Supported' : 'No sensor'}`
+            : health.error ?? 'Health Connect provider service not active'
+        }
+        source={health.source}
+      />
+      <HapticButton title="Refresh vitals" onPress={() => { void health.refresh(); }} disabled={!health.isAvailable} variant="outline" style={styles.stackedButton} />
     </View>
   );
 };
@@ -105,6 +144,7 @@ const MotionSection: React.FC = () => {
  */
 const CaptureSection: React.FC = () => {
   const camera = useCamera();
+  const cameraExt = useCameraExtensions();
   const video = useVideo();
   const library = useMediaLibrary();
   const [status, setStatus] = useState<string | null>(null);
@@ -279,6 +319,20 @@ const CaptureSection: React.FC = () => {
           source="hardware"
         />
       ))}
+
+      <SectionHeader title="CameraX Extensions" hint={cameraExt.available ? 'Tensor ISP active' : 'vendor extensions unavailable'} />
+      <MetricCard
+        title="Computational Photography"
+        value={cameraExt.available ? `${cameraExt.cameras.length} camera lenses` : null}
+        badge={cameraExt.available ? 'TENSOR ISP' : 'STANDARD'}
+        badgeColor={cameraExt.available ? Colors.dark.primary : Colors.dark.tertiary}
+        subtitle={
+          cameraExt.available
+            ? `Night Sight: ${cameraExt.hasNightSight ? 'Yes' : 'No'} · Ultra HDR: ${cameraExt.hasUltraHdr ? 'Yes' : 'No'} · Portrait Bokeh: ${cameraExt.hasPortraitBokeh ? 'Yes' : 'No'}`
+            : 'Vendor extensions (Night Sight, HDR+, Bokeh) query camera HAL'
+        }
+        source={cameraExt.source}
+      />
     </View>
   );
 };
@@ -286,6 +340,7 @@ const CaptureSection: React.FC = () => {
 /** Microphone capture with real dBFS metering, input selection, routing and playback. */
 const AudioSection: React.FC = () => {
   const audio = useAudio();
+  const spatial = useSpatialAudio();
 
   return (
     <View>
@@ -383,6 +438,20 @@ const AudioSection: React.FC = () => {
         </>
       )}
       {audio.error ? <Text style={styles.error}>{audio.error}</Text> : null}
+
+      <SectionHeader title="Spatial Audio" hint={spatial.isAvailable ? 'Android Spatializer active' : 'stereo only'} />
+      <MetricCard
+        title="Binaural Rendering"
+        value={spatial.isAvailable ? (spatial.hasHeadTracker ? 'Head tracking' : 'Spatializer') : null}
+        badge={spatial.isAvailable ? 'SPATIAL AUDIO' : 'STANDARD STEREO'}
+        badgeColor={spatial.isAvailable ? Colors.dark.success : Colors.dark.tertiary}
+        subtitle={
+          spatial.hasHeadTracker
+            ? `Head tracking active · mode: ${spatial.headTrackingMode} · level: ${spatial.immersiveAudioLevel}`
+            : 'Pixel Buds Pro dynamic head tracking and binaural rendering'
+        }
+        source={spatial.source}
+      />
     </View>
   );
 };
@@ -509,6 +578,7 @@ const RadiosSection: React.FC<{ caps: ReturnType<typeof useCapabilities> }> = ({
   const radios = useRadios();
   const nfc = useNFC();
   const ble = useBLE();
+  const channelSounding = useChannelSounding();
   const uwb = useUWB();
   const location = useLocation();
   const [writeState, setWriteState] = useState<string | null>(null);
@@ -612,6 +682,20 @@ const RadiosSection: React.FC<{ caps: ReturnType<typeof useCapabilities> }> = ({
         />
       ))}
 
+      <SectionHeader title="BLE 6.0 Channel Sounding" hint={channelSounding.isSupported ? 'PBR hardware active' : 'unsupported'} />
+      <MetricCard
+        title="Centimeter Ranging"
+        value={channelSounding.isSupported ? (channelSounding.isRanging ? 'Ranging…' : 'Supported') : null}
+        badge={channelSounding.isSupported ? 'BLE 6.0' : 'UNAVAILABLE'}
+        badgeColor={channelSounding.isSupported ? Colors.dark.success : Colors.dark.warning}
+        subtitle={
+          channelSounding.isSupported
+            ? `Sub-meter phase-based ranging complementing UWB · ${channelSounding.targets.length} targets`
+            : 'BLE 6.0 Channel Sounding HAL not present on this device'
+        }
+        source={channelSounding.source}
+      />
+
       <SectionHeader title="Ultra-wideband" hint={uwb.chipId ?? 'no chip'} />
       <MetricCard
         title="Transceiver"
@@ -703,6 +787,7 @@ function flag(v: boolean | null | undefined): string {
 const SecuritySection: React.FC = () => {
   const biometrics = useBiometrics();
   const security = useSecurity();
+  const playIntegrity = usePlayIntegrity();
   const [vaultState, setVaultState] = useState<string | null>(null);
   const [authState, setAuthState] = useState<string | null>(null);
 
@@ -785,6 +870,35 @@ const SecuritySection: React.FC = () => {
         <HapticButton title="Delete secret" onPress={() => { void clearVault(); }} variant="outline" style={styles.flexRight} />
       </View>
       {vaultState ? <Text style={styles.note}>{vaultState}</Text> : null}
+
+      <SectionHeader title="Play Integrity & Key Attestation" hint={playIntegrity.hasStrongBox ? 'Titan M2 active' : 'TEE Keystore'} />
+      <MetricCard
+        title="Hardware Attestation"
+        value={playIntegrity.hasStrongBox ? 'StrongBox Keystore 400' : 'TEE Keystore'}
+        badge={playIntegrity.isAttesting ? 'ATTESTING' : playIntegrity.hasStrongBox ? 'TITAN M2' : 'TEE'}
+        badgeColor={playIntegrity.hasStrongBox ? Colors.dark.success : Colors.dark.tertiary}
+        subtitle={
+          playIntegrity.lastAttestation
+            ? `Verified EC keypair · chain: ${playIntegrity.lastAttestation.certificateChainLength} certs`
+            : 'Cryptographic proof that telemetry is directly from hardware enclave'
+        }
+        source={playIntegrity.source}
+      />
+      <View style={styles.row}>
+        <HapticButton
+          title={playIntegrity.isAttesting ? 'Attesting…' : 'Attest Hardware Key'}
+          onPress={() => { void playIntegrity.requestAttestation('pixelkit-nonce-demo'); }}
+          disabled={playIntegrity.isAttesting}
+          variant="secondary"
+          style={styles.flexLeft}
+        />
+        <HapticButton
+          title="Re-check integrity"
+          onPress={() => { void playIntegrity.refresh(); }}
+          variant="outline"
+          style={styles.flexRight}
+        />
+      </View>
     </View>
   );
 };

@@ -23,7 +23,7 @@ export interface DocField {
 export interface DocModule {
   id: string;
   name: string;
-  category: 'silicon' | 'pro' | 'ai' | 'sensors' | 'radios' | 'system';
+  category: 'silicon' | 'compute' | 'pro' | 'ai' | 'sensors' | 'radios' | 'system';
   /** Hardware or service this maps onto. */
   chipBadge: string;
   badgeColor: string;
@@ -40,9 +40,9 @@ export interface DocModule {
   returns: DocField[];
   /** Functions it returns. */
   actions: DocField[];
-  example: string;
+  example?: string;
   /** Guidance for a coding agent working against this hook. */
-  agentNote: string;
+  agentNote?: string;
 }
 
 export const SILICON = '#B794FF';

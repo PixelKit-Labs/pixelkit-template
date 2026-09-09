@@ -7,10 +7,9 @@
  * function: the HiLight tool lights the ring, the summarize tool runs on-device.
  */
 
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { View, Text, ScrollView } from 'react-native';
-import PixelNative, { type AppFunctionInfo } from '@pixelkit-labs/native';
-import { useHaptics, useHiLight } from '@pixelkit-labs/sdk';
+import { useAppFunctions, useHaptics, useHiLight } from '@pixelkit-labs/sdk';
 import { Colors, Fonts } from '../../theme/colors';
 import { HapticButton } from '../../components/HapticButton';
 import { MetricCard } from '../../components/MetricCard';
@@ -22,34 +21,25 @@ export const AgentsSection: React.FC<{
   hilight: ReturnType<typeof useHiLight>;
   haptics: ReturnType<typeof useHaptics>;
   genaiTasks: ReturnType<typeof useGenAITasks>;
-}> = ({ hilight, haptics, genaiTasks }) => {
-  const [registeredFunctions, setRegisteredFunctions] = useState<AppFunctionInfo[]>([]);
+  appFunctions: ReturnType<typeof useAppFunctions>;
+}> = ({ hilight, haptics, genaiTasks, appFunctions }) => {
   const [functionFeedback, setFunctionFeedback] = useState<string | null>(null);
 
-  useEffect(() => {
-    if (!PixelNative) return;
-    try {
-      setRegisteredFunctions(PixelNative.getAppFunctions());
-    } catch {
-      // The registry is absent in Expo Go and on web; the empty list says so.
-    }
-  }, []);
+  const registeredFunctions = appFunctions.functions;
 
   /** Runs the published function for real, then reports what came back. */
-  const testAppFunction = async (fn: AppFunctionInfo) => {
+  const testAppFunction = async (fn: (typeof registeredFunctions)[number]) => {
     haptics.playPrimitives([{ primitive: 'CLICK', scale: 1.0 }]);
     let detail = '';
     try {
-      if (PixelNative?.executeAppFunction) {
-        const res = await PixelNative.executeAppFunction(fn.id, { level: 15, primitive: 'thud' });
-        detail = res?.message ?? res?.status ?? 'executed';
-      }
+      const res = await appFunctions.executeFunction(fn.id, { level: 15, primitive: 'thud' });
+      detail = res?.success ? 'success' : (res?.error ?? 'failed');
       if (fn.id === 'triggerHiLightPulse') {
         hilight.triggerGeminiPulse(3000);
       } else if (fn.id === 'summarizeText') {
         await genaiTasks.summarize('PixelKit provides deep low-level hardware access to Google Pixel 11 Pro.');
       }
-      setFunctionFeedback(`Executed ${fn.name} on ${fn.target}: ${detail}`);
+      setFunctionFeedback(`Executed ${fn.name}: ${detail} (${res.executionTimeMs} ms)`);
     } catch (e: any) {
       setFunctionFeedback(`${fn.name} failed: ${e?.message ?? 'unknown error'}`);
     }
@@ -83,7 +73,7 @@ export const AgentsSection: React.FC<{
           <Text style={styles.cardDesc}>{fn.description}</Text>
           <View style={styles.agentCardFoot}>
             <Text style={styles.agentMeta}>
-              {fn.target} · {fn.id}
+              {fn.category} · {fn.id}
             </Text>
             <HapticButton
               title="Run it"

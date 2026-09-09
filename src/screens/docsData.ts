@@ -20,6 +20,7 @@ export { type DocField, type DocModule } from './docs/shared';
 /** Category to accent colour. The only thing this app decides about a documentation entry. */
 const BADGE: Record<DocModule['category'], string> = {
   silicon: SILICON,
+  compute: SILICON,
   pro: PRO,
   ai: AI,
   sensors: SENSOR,

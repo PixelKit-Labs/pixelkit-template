@@ -11,7 +11,7 @@
 
 import React, { useState } from 'react';
 import { View, Text, StyleSheet, Platform } from 'react-native';
-import { resetObservability, useADPF, useCPU, useCapabilities, useCellular, useDevice, useDisplay, useGPU, useMemory, useNetwork, useObservability, useTPU } from '@pixelkit-labs/sdk';
+import { resetObservability, useADPF, useCPU, useCapabilities, useCellular, useDevice, useDisplay, useGPU, useMemory, useNetwork, useObservability, usePerfetto, useTPU } from '@pixelkit-labs/sdk';
 import { Chip, Reactor, SectionHeader, TelemetryRow } from '../components/Decor';
 import { Colors, Type } from '../theme/colors';
 import { HapticButton } from '../components/HapticButton';
@@ -35,6 +35,7 @@ export const DashboardScreen: React.FC = () => {
   const display = useDisplay();
   const network = useNetwork();
   const cellular = useCellular();
+  const perfetto = usePerfetto();
   const obs = useObservability();
 
   const sections = sectionsFor('silicon');
@@ -92,7 +93,7 @@ export const DashboardScreen: React.FC = () => {
       {section === 'compute' && <ComputeSection cpu={cpu} gpu={gpu} memory={memory} adpf={adpf} tpu={tpu} caps={caps} />}
       {section === 'system' && <SystemSection device={device} display={display} caps={caps} />}
       {section === 'network' && <NetworkSection network={network} cellular={cellular} caps={caps} />}
-      {section === 'trace' && <TraceSection obs={obs} />}
+      {section === 'trace' && <TraceSection obs={obs} perfetto={perfetto} />}
     </ScreenScaffold>
   );
 };
@@ -451,12 +452,42 @@ const NetworkSection: React.FC<{
 );
 
 /** What every hook has been doing: provenance, events, slow operations and failures. */
-const TraceSection: React.FC<{ obs: ReturnType<typeof useObservability> }> = ({ obs }) => {
+const TraceSection: React.FC<{
+  obs: ReturnType<typeof useObservability>;
+  perfetto: ReturnType<typeof usePerfetto>;
+}> = ({ obs, perfetto }) => {
   const recentEvents = obs.events.slice(-14).reverse();
   const failing = obs.health.filter(h => h.errors > 0);
 
   return (
     <View>
+      <SectionHeader title="Silicon tracing" hint={perfetto.isSupported ? `Perfetto ${perfetto.perfettoVersion ?? 'v54'}` : 'unavailable on this build'} />
+      <MetricCard
+        title="Perfetto silicon capture"
+        value={perfetto.isTracing ? 'Recording…' : perfetto.isSupported ? 'Ready' : 'Not supported'}
+        badge={perfetto.isTracing ? 'TRACING' : perfetto.isSupported ? 'PERFETTO' : 'N/A'}
+        badgeColor={perfetto.isTracing ? Colors.dark.warning : perfetto.isSupported ? Colors.dark.success : Colors.dark.error}
+        subtitle={
+          perfetto.lastTraceUri
+            ? `Captured to ${perfetto.lastTraceUri.split('/').pop()}`
+            : 'Streams kernel ftrace scheduling, CPU cluster frequencies, and GPU slices'
+        }
+        source={perfetto.source}
+      />
+      <HapticButton
+        title={perfetto.isTracing ? 'Stop silicon trace' : 'Capture 5s silicon trace'}
+        onPress={() => {
+          if (perfetto.isTracing) {
+            void perfetto.stopTrace();
+          } else {
+            void perfetto.startTrace(['sched', 'freq', 'gfx']);
+          }
+        }}
+        disabled={!perfetto.isSupported}
+        variant="secondary"
+        style={styles.actionButton}
+      />
+
       <SectionHeader title="Provenance by module" hint={`${Object.keys(obs.sources).length} reporting`} />
       <View style={styles.chipRow}>
         {Object.entries(obs.sources).map(([mod, srcs]) => (

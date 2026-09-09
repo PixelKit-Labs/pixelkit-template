@@ -339,27 +339,31 @@ export const DocsScreen: React.FC = () => {
                       )}
 
                       {/* Example */}
-                      <View style={styles.codeBlock}>
-                        <View style={styles.codeHeaderRow}>
-                          <Text style={styles.blockLabel}>EXAMPLE</Text>
-                          <Pressable
-                            onPress={() => handleCopy(mod.example, `${mod.name} example`)}
-                            style={styles.copyButton}
-                            accessibilityRole="button"
-                            accessibilityLabel={`Copy ${mod.name} example`}
-                          >
-                            <Text style={styles.copyButtonText}>COPY</Text>
-                          </Pressable>
+                      {mod.example ? (
+                        <View style={styles.codeBlock}>
+                          <View style={styles.codeHeaderRow}>
+                            <Text style={styles.blockLabel}>EXAMPLE</Text>
+                            <Pressable
+                              onPress={() => handleCopy(mod.example ?? '', `${mod.name} example`)}
+                              style={styles.copyButton}
+                              accessibilityRole="button"
+                              accessibilityLabel={`Copy ${mod.name} example`}
+                            >
+                              <Text style={styles.copyButtonText}>COPY</Text>
+                            </Pressable>
+                          </View>
+                          <ScrollView horizontal showsHorizontalScrollIndicator={false}>
+                            <Text style={styles.codeText}>{mod.example}</Text>
+                          </ScrollView>
                         </View>
-                        <ScrollView horizontal showsHorizontalScrollIndicator={false}>
-                          <Text style={styles.codeText}>{mod.example}</Text>
-                        </ScrollView>
-                      </View>
+                      ) : null}
 
-                      <View style={styles.agentNote}>
-                        <Text style={styles.agentNoteLabel}>AGENT NOTE</Text>
-                        <Text style={styles.agentNoteText}>{mod.agentNote}</Text>
-                      </View>
+                      {mod.agentNote ? (
+                        <View style={styles.agentNote}>
+                          <Text style={styles.agentNoteLabel}>AGENT NOTE</Text>
+                          <Text style={styles.agentNoteText}>{mod.agentNote}</Text>
+                        </View>
+                      ) : null}
                     </View>
                   )}
                 </View>
