@@ -14,7 +14,7 @@ import { Colors, Fonts, Radius } from '../theme/colors';
 export type HapticButtonVariant = 'primary' | 'cta' | 'secondary' | 'outline' | 'danger' | 'ghost';
 
 export interface HapticButtonProps {
-  title: string;
+  title?: string;
   onPress: () => void;
   /** Haptic pattern played on tap (default: 'light') */
   hapticType?: HapticType;
@@ -23,8 +23,9 @@ export interface HapticButtonProps {
   style?: StyleProp<ViewStyle>;
   textStyle?: StyleProp<TextStyle>;
   disabled?: boolean;
-  /** Rendered before the label */
+  /** Rendered before the label, or alone if title is omitted */
   icon?: React.ReactNode;
+  accessibilityLabel?: string;
 }
 
 const SIZES = {
@@ -88,9 +89,11 @@ export const HapticButton: React.FC<HapticButtonProps> = ({
     >
       <View style={styles.content}>
         {icon}
-        <Text style={[styles.text, { color, fontSize: s.fontSize, marginLeft: icon ? 8 : 0 }, textStyle]} numberOfLines={1}>
-          {title}
-        </Text>
+        {title ? (
+          <Text style={[styles.text, { color, fontSize: s.fontSize, marginLeft: icon ? 8 : 0 }, textStyle]} numberOfLines={1}>
+            {title}
+          </Text>
+        ) : null}
       </View>
     </Pressable>
   );

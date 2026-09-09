@@ -13,6 +13,7 @@ import { HarmBlockThreshold } from '@google/genai';
 import { saveApiKey, useGemini, useHaptics, useSpeechAI, type AIMessage, type SafetyThreshold } from '@pixelkit-labs/sdk';
 import { Colors } from '../../theme/colors';
 import { HapticButton } from '../../components/HapticButton';
+import { MicIcon } from '../../components/MicIcon';
 import { StatChip } from '../../components/Decor';
 import { useGeminiNano } from '@pixelkit-labs/sdk/mlkit';
 import { styles } from './styles';
@@ -551,6 +552,16 @@ export const ChatSection: React.FC<{
             </View>
           </ScrollView>
   
+          {/* Live listening banner when mic is active */}
+          {speech.isListening && (
+            <View style={{ flexDirection: 'row', alignItems: 'center', paddingHorizontal: 16, paddingVertical: 8, backgroundColor: `${Colors.dark.primary}1A`, borderTopWidth: 1, borderTopColor: `${Colors.dark.primary}44`, gap: 8 }}>
+              <ActivityIndicator size="small" color={Colors.dark.primary} />
+              <Text style={{ color: Colors.dark.primary, fontSize: 12, flex: 1 }} numberOfLines={1}>
+                {speech.streamingPartial ? `"${speech.streamingPartial}"` : 'Listening… speak into your microphone'}
+              </Text>
+            </View>
+          )}
+
           {/* Chat Composer with generous bottom padding */}
           <View style={styles.composer}>
             <TextInput
@@ -562,11 +573,17 @@ export const ChatSection: React.FC<{
               onSubmitEditing={handleSend}
             />
             <HapticButton
-              title={speech.isListening ? 'Stop' : 'Mic'}
               onPress={onVoiceToggle}
               variant={speech.isListening ? 'danger' : 'outline'}
               style={styles.composerMic}
-              textStyle={{ fontSize: 16 }}
+              accessibilityLabel={speech.isListening ? 'Stop listening' : 'Voice input'}
+              icon={
+                <MicIcon
+                  size={20}
+                  isListening={speech.isListening}
+                  color={speech.isListening ? Colors.dark.onPrimary : Colors.dark.primary}
+                />
+              }
             />
             <HapticButton
               title="Send"
