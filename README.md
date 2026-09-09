@@ -54,11 +54,11 @@ The hooks themselves are not here. They come from
 Every hook returns `source: 'hardware' | 'derived' | 'unavailable'`. There is deliberately no
 `simulated` member, so a fabricated reading cannot be represented.
 
-**The SDK exports reference components, and this app carries its own editable copies.** That is
-deliberate: a template you cannot change is not a template. `MetricCard` here is the reference for
-rendering provenance honestly: a `null` value renders as an em dash and the control that depends
-on it refuses, rather than showing a number nobody measured. If you replace the components, keep
-that behaviour — it is the only part of this template that matters more than how it looks.
+**The SDK ships no UI, so rendering a reading honestly is this app's job.** It exports the hooks,
+the types and the observability layer, and nothing that draws. `MetricCard` here is the reference:
+a `null` value renders as an em dash and the control that depends on it refuses, rather than
+showing a number nobody measured. If you replace the components, keep that behaviour — it is the
+one part of this template that matters more than how it looks.
 
 ## Adding a hook
 
