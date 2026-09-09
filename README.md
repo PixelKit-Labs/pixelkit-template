@@ -77,4 +77,10 @@ rather than a local copy. A hook the SDK exports with nowhere to try it fails th
 See [docs/using-this-template.md](./docs/using-this-template.md) for the ten places the PixelKit
 name is baked in, what is worth keeping, and what to delete when you do not need it.
 
+## Documentation
+
+[https://pixelkit-labs.github.io/pixelkit-docs/](https://pixelkit-labs.github.io/pixelkit-docs/) covers every hook: its inputs, its
+outputs, and a contract for each function it exposes. The hooks are not documented in this
+repository, because they are not implemented here.
+
 MIT.
