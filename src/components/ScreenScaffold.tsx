@@ -9,7 +9,7 @@
  */
 
 import React from 'react';
-import { View, Text, StyleSheet, ScrollView, RefreshControl, StyleProp, ViewStyle } from 'react-native';
+import { View, Text, StyleSheet, ScrollView, RefreshControl, StyleProp, ViewStyle, Platform } from 'react-native';
 import { Colors, Type, Radius } from '../theme/colors';
 import { HapticButton } from './HapticButton';
 import type { SurfaceSection } from '@pixelkit-labs/sdk';
@@ -52,6 +52,7 @@ export const SectionTabs: React.FC<{
   style?: StyleProp<ViewStyle>;
 }> = ({ sections, activeSection, onSelect, showBlurb = true, style }) => {
   const active = sections.find(s => s.id === activeSection);
+  const isFour = sections.length === 4;
   return (
     <View style={style}>
       <View style={styles.tabRow}>
@@ -63,7 +64,7 @@ export const SectionTabs: React.FC<{
             hapticType="selection"
             variant={section.id === activeSection ? 'primary' : 'secondary'}
             size="sm"
-            style={styles.tabButton}
+            style={[styles.tabButton, isFour && styles.tabButtonFour]}
             textStyle={styles.tabLabel}
           />
         ))}
@@ -116,7 +117,8 @@ const styles = StyleSheet.create({
   subtitle: { ...Type.caption, color: Colors.dark.textMuted, marginTop: 2 },
   /** Wraps, so a six-section screen does not squeeze its labels to nothing. */
   tabRow: { flexDirection: 'row', flexWrap: 'wrap', gap: 6, marginTop: 12, marginBottom: 8 },
-  tabButton: { flexGrow: 1, flexBasis: '30%', paddingHorizontal: 6, borderRadius: Radius.md },
-  tabLabel: { fontSize: 11 },
+  tabButton: { flexGrow: 1, flexBasis: '30%', paddingHorizontal: 4, borderRadius: Radius.md },
+  tabButtonFour: { flexBasis: '47%' },
+  tabLabel: { fontSize: 11, letterSpacing: Platform.OS === 'android' ? 0 : 0.2, textAlign: 'center' },
   blurb: { ...Type.caption, color: Colors.dark.textMuted, marginBottom: 12, marginLeft: 2 },
 });

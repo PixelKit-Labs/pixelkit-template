@@ -6,7 +6,7 @@
  */
 
 import React from 'react';
-import { Pressable, Text, StyleSheet, View, ViewStyle, TextStyle, StyleProp } from 'react-native';
+import { Pressable, Text, StyleSheet, View, ViewStyle, TextStyle, StyleProp, Platform } from 'react-native';
 import { HapticType, useHaptics } from '@pixelkit-labs/sdk';
 import { Colors, Fonts, Radius } from '../theme/colors';
 
@@ -26,6 +26,7 @@ export interface HapticButtonProps {
   /** Rendered before the label, or alone if title is omitted */
   icon?: React.ReactNode;
   accessibilityLabel?: string;
+  numberOfLines?: number;
 }
 
 const SIZES = {
@@ -44,6 +45,8 @@ export const HapticButton: React.FC<HapticButtonProps> = ({
   textStyle,
   disabled = false,
   icon,
+  accessibilityLabel,
+  numberOfLines,
 }) => {
   const { triggerHaptic } = useHaptics();
   const s = SIZES[size];
@@ -79,6 +82,7 @@ export const HapticButton: React.FC<HapticButtonProps> = ({
       onPress={handlePress}
       disabled={disabled}
       accessibilityRole="button"
+      accessibilityLabel={accessibilityLabel}
       style={({ pressed }) => [
         styles.button,
         { minHeight: s.minHeight, paddingHorizontal: s.paddingHorizontal },
@@ -90,7 +94,10 @@ export const HapticButton: React.FC<HapticButtonProps> = ({
       <View style={styles.content}>
         {icon}
         {title ? (
-          <Text style={[styles.text, { color, fontSize: s.fontSize, marginLeft: icon ? 8 : 0 }, textStyle]} numberOfLines={1}>
+          <Text
+            style={[styles.text, { color, fontSize: s.fontSize, marginLeft: icon ? 8 : 0 }, textStyle]}
+            numberOfLines={numberOfLines}
+          >
             {title}
           </Text>
         ) : null}
@@ -116,6 +123,6 @@ const styles = StyleSheet.create({
   },
   text: {
     fontFamily: Fonts.sansSemi,
-    letterSpacing: 0.1,
+    letterSpacing: Platform.OS === 'android' ? 0 : 0.1,
   },
 });
