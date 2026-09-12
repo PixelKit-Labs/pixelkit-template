@@ -4,6 +4,12 @@ All notable changes to the PixelKit Template are recorded here. The format follo
 
 **Rule:** every change to the codebase bumps the patch version by 0.0.1 (1.0.0 → 1.0.1 → 1.0.2 …) and adds an entry here in the same commit. Bump `version` in package.json and `expo.version` in app.json together, and increment `expo.android.versionCode` by 1. Minor and major bumps are decided by the maintainer, not by agents.
 
+## [1.3.4] - 2026-09-12
+
+### Docs
+- **Synchronized Agent Guides (`AGENTS.md`, `CLAUDE.md`, `GEMINI.md`)**:
+  Polished agent guides across `pixelkit-template` and `PixelKit-Labs/pixelkit-sdk` to guarantee identical single-source-of-truth rules, explicit `@pixelkit-labs/sdk` import paths, and updated validation instructions.
+
 ## [1.3.3] - 2026-09-12
 
 ### Added
