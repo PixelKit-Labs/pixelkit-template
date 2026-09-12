@@ -4,6 +4,14 @@ All notable changes to the PixelKit Template are recorded here. The format follo
 
 **Rule:** every change to the codebase bumps the patch version by 0.0.1 (1.0.0 → 1.0.1 → 1.0.2 …) and adds an entry here in the same commit. Bump `version` in package.json and `expo.version` in app.json together, and increment `expo.android.versionCode` by 1. Minor and major bumps are decided by the maintainer, not by agents.
 
+## [1.3.3] - 2026-09-12
+
+### Added
+- **Automated Dependency & Registry Validation Gate (`scripts/check-deps.mjs`)**:
+  Added automated validation script that queries the npm registry in real-time to verify that all `@pixelkit-labs/*` dependencies actually exist and are published on npm before allowing commits or CI verification. Also executes `npm ci --dry-run` to enforce 100% lockfile parity.
+- **Git Pre-Push Hook (`.githooks/pre-push`) & Automatic Hook Setup**:
+  Added `.githooks/pre-push` to automatically run `npm run verify` before every git push, preventing broken lockfiles, unreleased SDK versions, typecheck errors, or parity drift from ever reaching GitHub. Added `"prepare"` script in `package.json` to auto-configure `core.hooksPath`.
+
 ## [1.3.2] - 2026-09-12
 
 ### Fixed
