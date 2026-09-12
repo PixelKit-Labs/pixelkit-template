@@ -24,10 +24,11 @@ Device facts come from the hardware, read with `adb` and `dumpsys`. Do not resta
 
 12. **One home per hook.** Every exported hook is declared in `src/core/surface.ts` with the tab and section that demonstrates it, and that screen must actually call it. A hook may appear elsewhere as a supporting effect — AI Lab pulses HiLight — but it is *demonstrated* in exactly one place, and the Docs entry points the reader there. Adding a hook without a home fails `npm run parity`, as does a documented function with no control anywhere unless it is waived with a reason in `scripts/parity-waivers.json`.
 13. **Screens share their frame.** Titles, sub-tab rows and section blurbs come from `ScreenScaffold` (`ScreenHeader`, `SectionTabs`) and `sectionsFor(tab)`. Metrics are `MetricCard`, section titles are `SectionHeader`, buttons are `HapticButton`. Do not hand-roll a header or a tab row; a screen that looks different from the others is a bug, not a style.
+14. **SDK dependency protocol.** When upgrading `@pixelkit-labs/sdk`, `@pixelkit-labs/native`, or `@pixelkit-labs/mlkit`, verify the release is published on npm (`npm view @pixelkit-labs/sdk@<version>`). Never edit dependency versions in `package.json` without immediately running `npm install` to update `package-lock.json` and committing both together. `npm run verify` runs `check-lockfile` (`npm ci --dry-run`) to guarantee lockfile parity.
 
 ## Validation
 
-- `npm run verify` must pass: `typecheck` with 0 errors, then `parity` with no unhomed hooks and no unreachable documented actions.
+- `npm run verify` must pass: `check-lockfile` (ensures `package-lock.json` matches `package.json` and resolves on npm), `typecheck` with 0 errors, then `parity` with no unhomed hooks and no unreachable documented actions.
 - `npx expo export -p android` must bundle.
 - Native changes: build from the space-free junction `C:\dev\pixel-delta\android` with `.\gradlew.bat assembleDebug` (JDK 17, SDK at `%LOCALAPPDATA%\Android\Sdk`), then `adb install -r -g android/app/build/outputs/apk/debug/app-debug.apk`.
 - On-device checks: `adb logcat -s ReactNativeJS | grep PixelKit` for provenance events; `dumpsys` for independent confirmation.

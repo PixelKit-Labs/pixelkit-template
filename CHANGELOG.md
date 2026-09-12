@@ -1,8 +1,18 @@
-﻿# Changelog
+# Changelog
 
 All notable changes to the PixelKit Template are recorded here. The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and versions follow [Semantic Versioning](https://semver.org/).
 
-**Rule:** every change to the codebase bumps the patch version by 0.0.1 (1.0.0 → 1.0.1 → 1.0.2 …) and adds an entry here in the same commit. Bump ersion in package.json and expo.version in pp.json together, and increment expo.android.versionCode by 1. Minor and major bumps are decided by the maintainer, not by agents.
+**Rule:** every change to the codebase bumps the patch version by 0.0.1 (1.0.0 → 1.0.1 → 1.0.2 …) and adds an entry here in the same commit. Bump `version` in package.json and `expo.version` in app.json together, and increment `expo.android.versionCode` by 1. Minor and major bumps are decided by the maintainer, not by agents.
+
+## [1.3.2] - 2026-09-12
+
+### Fixed
+- **Synchronize Lockfile for `@pixelkit-labs` 1.6.1 Release**:
+  Synchronized `package-lock.json` with the published `@pixelkit-labs/sdk@1.6.1`, `@pixelkit-labs/native@1.6.1`, and `@pixelkit-labs/mlkit@1.6.1` packages on npm, resolving the `ETARGET` / `npm ci` failures in GitHub Actions CI and Dependabot.
+- **Added `check-lockfile` Pre-Verification Gate**:
+  Added `check-lockfile` (`npm ci --dry-run`) to `npm run verify` in `package.json` so lockfile and registry desynchronizations are caught immediately during local validation before any code is pushed.
+- **Typo Fixes in Changelog**:
+  Cleaned up escaped control characters in changelog description and 1.3.1 entry.
 
 ## [1.3.1] - 2026-09-09
 
@@ -14,11 +24,9 @@ All notable changes to the PixelKit Template are recorded here. The format follo
 
 ### Fixed
 - **Android Text Truncation in Sub-Tabs & Telemetry**:
-  Fixed React Native Android StaticLayout text truncation where letterSpacing and 
-umberOfLines={1} caused button labels (COMPUTE, SYSTEM, NETWORK, TRACE) to truncate prematurely with ellipsis (...). Made 
-umberOfLines optional on HapticButton and normalized letterSpacing on Android.
+  Fixed React Native Android StaticLayout text truncation where `letterSpacing` and `numberOfLines={1}` caused button labels (COMPUTE, SYSTEM, NETWORK, TRACE) to truncate prematurely with ellipsis (...). Made `numberOfLines` optional on HapticButton and normalized letterSpacing on Android.
 - **Symmetrical 2×2 Sub-Tab Grid Layout**:
-  Updated SectionTabs to detect 4-section screens (like **Silicon**) and render them as a balanced 2×2 grid (lexBasis: '47%') instead of an awkward 3-and-1 wrap.
+  Updated SectionTabs to detect 4-section screens (like **Silicon**) and render them as a balanced 2×2 grid (`flexBasis: '47%'`) instead of an awkward 3-and-1 wrap.
 - **Icon-Only Haptic Buttons**:
   Updated HapticButton to support icon-only modes with centered alignment and refined composerMic to a 42×42 dp circular action button matching the text input and Send button height.
 
