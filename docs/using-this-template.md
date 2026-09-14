@@ -32,7 +32,7 @@ These are the parts worth taking, and the reason the template exists:
 - **`src/core/surface.ts` and `scripts/check-parity.js`** — the map from hook to the screen that demonstrates it, and the check that fails the build when the two disagree. This is what stops an app from drifting out of sync with the SDK.
 - **`MetricCard`'s `source` prop** — a value that cannot be read renders as "—" with an N/A tag. The discipline only works if you keep it everywhere; one card that fills a gap with `0` undoes it.
 - **`ScreenScaffold`** — one header and one sub-tab control for every screen.
-- **The screen implementations** — Four comprehensive tabs (Silicon, AI Lab, Sensors, Docs) exercising all 51 PixelKit hooks against real Google Pixel hardware.
+- **The screen implementations** — Four comprehensive tabs (Silicon, AI Lab, Sensors, Docs) exercising every hook in the published PixelKit SDK against real Google Pixel hardware.
 
 ## What to delete when you do not need it
 
