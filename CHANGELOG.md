@@ -4,6 +4,11 @@ All notable changes to the PixelKit Template are recorded here. The format follo
 
 **Rule:** every change to the codebase bumps the patch version by 0.0.1 (1.0.0 → 1.0.1 → 1.0.2 …) and adds an entry here in the same commit. Bump `version` in package.json and `expo.version` in app.json together, and increment `expo.android.versionCode` by 1. Minor and major bumps are decided by the maintainer, not by agents.
 
+## [1.3.5] - 2026-09-13
+
+### Docs
+- **Synchronized Documentation & README**: Updated `README.md`, `package.json`, and `docs/store-listing.md` to reflect all 51 PixelKit SDK hardware and AI capabilities.
+
 ## [1.3.4] - 2026-09-12
 
 ### Docs
