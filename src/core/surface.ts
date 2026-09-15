@@ -90,6 +90,8 @@ export const HOOK_HOMES: Record<string, HookHome> = {
   useSpeechAI: { tab: 'ai', section: 'voice' },
   useSpeech: { tab: 'ai', section: 'voice' },
   useAppFunctions: { tab: 'ai', section: 'agents' },
+  useCloudHardwareAgent: { tab: 'ai', section: 'agents' },
+  useGeminiLive: { tab: 'ai', section: 'agents' },
   // Sensors
   useSensors: { tab: 'sensors', section: 'motion' },
   useAltimeter: { tab: 'sensors', section: 'motion' },
