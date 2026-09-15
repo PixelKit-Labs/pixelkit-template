@@ -11,7 +11,7 @@
 
 import React, { useState } from 'react';
 import { View, Text, StyleSheet, Platform } from 'react-native';
-import { resetObservability, useADPF, useCPU, useCapabilities, useCellular, useDevice, useDisplay, useGPU, useMemory, useNetwork, useObservability, usePerfetto, useTPU } from '@pixelkit-labs/sdk';
+import { resetObservability, useADPF, useADPFHintSession, useBatteryShare, useChargingIntelligence, useCPU, useCapabilities, useCellular, useDevice, useDisplay, useGPU, useMemory, useNetwork, useObservability, usePerfetto, useTPU } from '@pixelkit-labs/sdk';
 import { Chip, Reactor, SectionHeader, TelemetryRow } from '../components/Decor';
 import { Colors, Type } from '../theme/colors';
 import { HapticButton } from '../components/HapticButton';
@@ -28,6 +28,9 @@ export const DashboardScreen: React.FC = () => {
   const caps = useCapabilities();
   const device = useDevice();
   const adpf = useADPF();
+  const adpfHint = useADPFHintSession();
+  const batteryShare = useBatteryShare();
+  const chargingIntel = useChargingIntelligence();
   const cpu = useCPU();
   const gpu = useGPU();
   const memory = useMemory();
@@ -90,8 +93,8 @@ export const DashboardScreen: React.FC = () => {
       onRefresh={handleRefresh}
       refreshing={refreshing}
     >
-      {section === 'compute' && <ComputeSection cpu={cpu} gpu={gpu} memory={memory} adpf={adpf} tpu={tpu} caps={caps} />}
-      {section === 'system' && <SystemSection device={device} display={display} caps={caps} />}
+      {section === 'compute' && <ComputeSection cpu={cpu} gpu={gpu} memory={memory} adpf={adpf} adpfHint={adpfHint} tpu={tpu} caps={caps} />}
+      {section === 'system' && <SystemSection device={device} display={display} caps={caps} batteryShare={batteryShare} chargingIntel={chargingIntel} />}
       {section === 'network' && <NetworkSection network={network} cellular={cellular} caps={caps} />}
       {section === 'trace' && <TraceSection obs={obs} perfetto={perfetto} />}
     </ScreenScaffold>
@@ -104,9 +107,10 @@ const ComputeSection: React.FC<{
   gpu: ReturnType<typeof useGPU>;
   memory: ReturnType<typeof useMemory>;
   adpf: ReturnType<typeof useADPF>;
+  adpfHint: ReturnType<typeof useADPFHintSession>;
   tpu: ReturnType<typeof useTPU>;
   caps: ReturnType<typeof useCapabilities>;
-}> = ({ cpu, gpu, memory, adpf, tpu, caps }) => (
+}> = ({ cpu, gpu, memory, adpf, adpfHint, tpu, caps }) => (
   <View>
     <SectionHeader title="Tensor G6 CPU" />
     <MetricCard
@@ -171,6 +175,15 @@ const ComputeSection: React.FC<{
       badgeColor={Colors.dark.tertiary}
       subtitle="last measured frame interval judged against the budget"
       source={gpu.frameRenderTimeMs == null ? 'unavailable' : 'derived'}
+    />
+    <MetricCard
+      title="ADPF hint session"
+      value={adpfHint.targetFrameDurationMs != null ? fmt(adpfHint.targetFrameDurationMs, 2) : null}
+      unit="ms budget"
+      badge={adpfHint.isSupported ? 'EAS ACTIVE' : 'UNSUPPORTED'}
+      badgeColor={adpfHint.isSupported ? Colors.dark.success : Colors.dark.warning}
+      subtitle="thread hint session negotiating render deadlines with Energy-Aware Scheduler"
+      source={adpfHint.source}
     />
 
     <SectionHeader title="GPU & frame pacing" />
@@ -255,7 +268,9 @@ const SystemSection: React.FC<{
   device: ReturnType<typeof useDevice>;
   display: ReturnType<typeof useDisplay>;
   caps: ReturnType<typeof useCapabilities>;
-}> = ({ device, display, caps }) => (
+  batteryShare: ReturnType<typeof useBatteryShare>;
+  chargingIntel: ReturnType<typeof useChargingIntelligence>;
+}> = ({ device, display, caps, batteryShare, chargingIntel }) => (
   <View>
     <SectionHeader title="Power" hint={device.batteryTechnology ?? 'battery'} />
     <MetricCard
@@ -305,6 +320,30 @@ const SystemSection: React.FC<{
       badgeColor={Colors.dark.tertiary}
       subtitle="charge counter as the gauge reports it"
       source={device.batteryChargeCounterMah != null ? 'hardware' : 'unavailable'}
+    />
+    <MetricCard
+      title="Charging intelligence"
+      value={chargingIntel.chargingTier ? chargingIntel.chargingTier.toUpperCase() : 'STANDARD'}
+      badge={chargingIntel.stateOfHealthPercent != null ? `${chargingIntel.stateOfHealthPercent}% HEALTH` : 'BATTERY HEALTH'}
+      badgeColor={chargingIntel.chargeLimitActive ? Colors.dark.warning : Colors.dark.success}
+      subtitle={
+        chargingIntel.cycleCount != null
+          ? `${chargingIntel.cycleCount} cycles · ${chargingIntel.chargingWattage != null ? `${fmt(chargingIntel.chargingWattage, 1)} W` : 'power'}`
+          : 'battery health & cycle counter from HAL'
+      }
+      source={chargingIntel.source}
+    />
+    <MetricCard
+      title="Battery Share"
+      value={batteryShare.isActive ? 'Active' : 'Standby'}
+      badge={batteryShare.isSupported ? 'REVERSE WPT' : 'UNSUPPORTED'}
+      badgeColor={batteryShare.isActive ? Colors.dark.success : Colors.dark.primary}
+      subtitle={
+        batteryShare.transmittedWatts != null
+          ? `Transmitting ${fmt(batteryShare.transmittedWatts, 1)} W · cutoff ${batteryShare.batteryThreshold}%`
+          : `Cutoff threshold ${batteryShare.batteryThreshold}% · Qi reverse charging`
+      }
+      source={batteryShare.source}
     />
 
     <SectionHeader title="Display" hint={display.hasArrSupport ? 'adaptive refresh' : 'fixed modes'} />

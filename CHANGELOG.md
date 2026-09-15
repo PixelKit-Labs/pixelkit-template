@@ -4,6 +4,18 @@ All notable changes to the PixelKit Template are recorded here. The format follo
 
 **Rule:** every change to the codebase bumps the patch version by 0.0.1 (1.0.0 → 1.0.1 → 1.0.2 …) and adds an entry here in the same commit. Bump `version` in package.json and `expo.version` in app.json together, and increment `expo.android.versionCode` by 1. Minor and major bumps are decided by the maintainer, not by agents.
 
+## [1.3.9] - 2026-09-15
+
+### Changed
+- **Bumped Dependencies to `@pixelkit-labs` 1.6.16**:
+  Updated `@pixelkit-labs/sdk`, `@pixelkit-labs/native`, and `@pixelkit-labs/mlkit` to `^1.6.16`.
+- **Wired Phase 1–4 Hardware & AI Hooks for Parity**:
+  - Homed all 12 expansion hooks in `src/core/surface.ts` (`HOOK_HOMES`).
+  - Added telemetry display cards for `useADPFHintSession`, `useBatteryShare`, and `useChargingIntelligence` to `DashboardScreen.tsx` (Silicon tab).
+  - Added telemetry display cards for `useAltimeter`, `useMicrophoneArray`, `useThermometer`, `useWifi7MLO`, `useWifiRTT`, `useSatelliteNTN`, `usePrivateSpace`, and `useKeyAgreement` to `SensorsLabScreen.tsx` (Sensors tab).
+  - Added telemetry display card for `useEmbeddings` to `src/screens/ailab/TasksSection.tsx` (AI Lab tab).
+  - Achieved 100% parity across all 51 exported hooks verified by `npm run verify`.
+
 ## [1.3.8] - 2026-09-13
 
 ### Docs

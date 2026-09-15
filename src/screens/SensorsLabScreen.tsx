@@ -14,6 +14,7 @@ import { CameraView } from 'expo-camera';
 import { VideoView } from 'expo-video';
 import {
   HapticEnvelopes,
+  useAltimeter,
   useAudio,
   useBLE,
   useBiometrics,
@@ -24,17 +25,24 @@ import {
   useHaptics,
   useHealthConnect,
   useHiLight,
+  useKeyAgreement,
   useLocation,
   useMediaLibrary,
+  useMicrophoneArray,
   useNFC,
   usePlayIntegrity,
+  usePrivateSpace,
   useRadios,
+  useSatelliteNTN,
   useSecurity,
   useSensors,
   useSpatialAudio,
+  useThermometer,
   useTorch,
   useUWB,
   useVideo,
+  useWifi7MLO,
+  useWifiRTT,
 } from '@pixelkit-labs/sdk';
 import { Colors, Type } from '../theme/colors';
 import { HapticButton } from '../components/HapticButton';
@@ -72,6 +80,7 @@ export const SensorsLabScreen: React.FC = () => {
 /** The IMU, magnetometer, barometer, light sensor, and Health Connect vitals. */
 const MotionSection: React.FC = () => {
   const sensors = useSensors(100);
+  const altimeter = useAltimeter();
   const health = useHealthConnect();
 
   return (
@@ -92,6 +101,19 @@ const MotionSection: React.FC = () => {
             : 'waiting for the first sample'
         }
         source={sensors.barometer.pressure == null ? 'unavailable' : 'hardware'}
+      />
+      <MetricCard
+        title="Altimeter"
+        value={altimeter.altitudeM != null ? Math.round(altimeter.altitudeM) : null}
+        unit="m ICAO"
+        badge={altimeter.pressureTrend ? altimeter.pressureTrend.toUpperCase() : 'STANDARD'}
+        badgeColor={altimeter.isAvailable ? Colors.dark.primary : Colors.dark.textMuted}
+        subtitle={
+          altimeter.verticalVelocityMs != null
+            ? `VSI ${altimeter.verticalVelocityMs > 0 ? '+' : ''}${altimeter.verticalVelocityMs.toFixed(1)} m/s · QNH ${altimeter.seaLevelPressureHpa} hPa`
+            : `QNH ${altimeter.seaLevelPressureHpa} hPa · barometric climb/descent rate`
+        }
+        source={altimeter.source}
       />
       <MetricCard
         title="Ambient light"
@@ -340,6 +362,7 @@ const CaptureSection: React.FC = () => {
 /** Microphone capture with real dBFS metering, input selection, routing and playback. */
 const AudioSection: React.FC = () => {
   const audio = useAudio();
+  const micArray = useMicrophoneArray();
   const spatial = useSpatialAudio();
 
   return (
@@ -452,6 +475,20 @@ const AudioSection: React.FC = () => {
         }
         source={spatial.source}
       />
+
+      <SectionHeader title="Microphone Array" hint={micArray.direction.toUpperCase()} />
+      <MetricCard
+        title="Acoustic beamforming"
+        value={micArray.microphones.length ? `${micArray.microphones.length} mics` : null}
+        badge={micArray.isSupported ? `BEAM: ${micArray.direction.toUpperCase()}` : 'UNSUPPORTED'}
+        badgeColor={micArray.isSupported ? Colors.dark.success : Colors.dark.warning}
+        subtitle={
+          micArray.isSupported
+            ? `Zoom: ${Math.round(micArray.fieldZoom * 100)}% · Direction: ${micArray.direction}`
+            : 'multi-microphone directional capture array'
+        }
+        source={micArray.source}
+      />
     </View>
   );
 };
@@ -461,6 +498,7 @@ const ActuatorsSection: React.FC = () => {
   const haptics = useHaptics();
   const torch = useTorch();
   const hilight = useHiLight();
+  const thermometer = useThermometer();
   const [lastEnvelope, setLastEnvelope] = useState<string | null>(null);
 
   const playEnvelope = (name: keyof typeof HapticEnvelopes) => {
@@ -569,6 +607,21 @@ const ActuatorsSection: React.FC = () => {
         <HapticButton title="Re-check daemon" onPress={() => { void hilight.refreshDaemonStatus(); }} variant="ghost" style={styles.flexRight} />
       </View>
       {hilight.error ? <Text style={styles.error}>{hilight.error}</Text> : null}
+
+      <SectionHeader title="Infrared Thermometer" hint="MLX90632 FIR sensor" />
+      <MetricCard
+        title="Surface temperature"
+        value={thermometer.surfaceTemperatureC != null ? thermometer.surfaceTemperatureC.toFixed(1) : null}
+        unit="°C"
+        badge={thermometer.isSupported ? thermometer.mode.toUpperCase() : 'NO SENSOR'}
+        badgeColor={thermometer.isSupported ? Colors.dark.success : Colors.dark.error}
+        subtitle={
+          thermometer.isSupported
+            ? `${thermometer.surfaceTemperatureF != null ? `${thermometer.surfaceTemperatureF.toFixed(1)} °F` : ''} · ambient ${thermometer.ambientTemperatureC != null ? `${thermometer.ambientTemperatureC.toFixed(1)} °C` : '—'} · ε=${thermometer.emissivity}`
+            : 'MLX90632 non-contact FIR temperature sensor on Pixel 8/9/10/11 Pro'
+        }
+        source={thermometer.source}
+      />
     </View>
   );
 };
@@ -580,6 +633,9 @@ const RadiosSection: React.FC<{ caps: ReturnType<typeof useCapabilities> }> = ({
   const ble = useBLE();
   const channelSounding = useChannelSounding();
   const uwb = useUWB();
+  const wifi7 = useWifi7MLO();
+  const wifiRtt = useWifiRTT();
+  const satellite = useSatelliteNTN();
   const location = useLocation();
   const [writeState, setWriteState] = useState<string | null>(null);
 
@@ -771,6 +827,48 @@ const RadiosSection: React.FC<{ caps: ReturnType<typeof useCapabilities> }> = ({
         variant="secondary"
         style={styles.stackedButton}
       />
+
+      <SectionHeader title="Wi-Fi 7 Multi-Link Operation" hint={wifi7.isMloActive ? 'MLO active' : 'single link'} />
+      <MetricCard
+        title="Wi-Fi 7 MLO"
+        value={wifi7.isMloActive ? `${wifi7.links.length} links active` : (wifi7.isSupported ? 'Supported' : 'Unsupported')}
+        badge={wifi7.isMloActive ? 'MLO LINK AGGREGATION' : 'WI-FI 7'}
+        badgeColor={wifi7.isMloActive ? Colors.dark.success : Colors.dark.primary}
+        subtitle={
+          wifi7.aggregateSpeedMbps != null
+            ? `Aggregate speed: ${wifi7.aggregateSpeedMbps} Mbps · ${wifi7.links.map(l => l.band).join(' + ')}`
+            : 'Multi-Link Operation across 2.4GHz, 5GHz, and 6GHz bands simultaneously'
+        }
+        source={wifi7.source}
+      />
+
+      <SectionHeader title="Wi-Fi RTT (802.11mc / 802.11az)" hint={wifiRtt.isRanging ? 'ranging' : 'idle'} />
+      <MetricCard
+        title="Wi-Fi Fine Time Measurement"
+        value={wifiRtt.isAvailable ? (wifiRtt.isRanging ? 'Ranging…' : 'Available') : null}
+        badge={wifiRtt.isSupported ? '802.11AZ / MC' : 'UNAVAILABLE'}
+        badgeColor={wifiRtt.isAvailable ? Colors.dark.success : Colors.dark.warning}
+        subtitle={
+          wifiRtt.isAvailable
+            ? `FTM round-trip time indoor positioning · ${wifiRtt.rangingResults.length} APs ranged`
+            : 'Wi-Fi RTT ranging service'
+        }
+        source={wifiRtt.source}
+      />
+
+      <SectionHeader title="Satellite NTN" hint={satellite.connectionState ? satellite.connectionState.toUpperCase() : 'DISCONNECTED'} />
+      <MetricCard
+        title="Non-Terrestrial Network"
+        value={satellite.isSupported ? (satellite.connectionState === 'connected' ? 'Connected' : satellite.connectionState) : null}
+        badge={satellite.isSupported ? (satellite.emergencyServicesReady ? 'SOS READY' : 'NTN') : 'UNSUPPORTED'}
+        badgeColor={satellite.emergencyServicesReady ? Colors.dark.success : Colors.dark.primary}
+        subtitle={
+          satellite.isSupported
+            ? `Carrier: ${satellite.carrier ?? '—'} · Signal: ${satellite.signalQualityBars ?? '—'} bars${satellite.pointingGuidance ? ` · Azimuth: ${satellite.pointingGuidance.azimuthDeg}°` : ''}`
+            : '3GPP Release 17 direct-to-cell satellite connectivity'
+        }
+        source={satellite.source}
+      />
     </View>
   );
 };
@@ -788,6 +886,8 @@ const SecuritySection: React.FC = () => {
   const biometrics = useBiometrics();
   const security = useSecurity();
   const playIntegrity = usePlayIntegrity();
+  const privateSpace = usePrivateSpace();
+  const keyAgreement = useKeyAgreement();
   const [vaultState, setVaultState] = useState<string | null>(null);
   const [authState, setAuthState] = useState<string | null>(null);
 
@@ -899,6 +999,26 @@ const SecuritySection: React.FC = () => {
           style={styles.flexRight}
         />
       </View>
+
+      <SectionHeader title="Android 15 Private Space" hint={privateSpace.autoLockPolicy ? privateSpace.autoLockPolicy.toUpperCase() : 'UNKNOWN'} />
+      <MetricCard
+        title="Private Space"
+        value={privateSpace.isInsidePrivateSpace ? 'Inside Private Space' : (privateSpace.isPrivateSpaceConfigured ? 'Configured' : 'Not configured')}
+        badge={privateSpace.isInsidePrivateSpace ? 'SECURE ISOLATION' : 'STANDARD PROFILE'}
+        badgeColor={privateSpace.isInsidePrivateSpace ? Colors.dark.success : Colors.dark.primary}
+        subtitle={`Auto-lock policy: ${privateSpace.autoLockPolicy} · isolated profile with separate biometric lock`}
+        source={privateSpace.source}
+      />
+
+      <SectionHeader title="ECDH Key Agreement" hint={keyAgreement.isStrongBoxSupported ? 'StrongBox' : 'Keystore'} />
+      <MetricCard
+        title="Hardware Key Agreement"
+        value={keyAgreement.isStrongBoxSupported ? 'Titan M2 StrongBox' : 'TEE / TEE-backed'}
+        badge="ECDH P-256"
+        badgeColor={keyAgreement.isStrongBoxSupported ? Colors.dark.success : Colors.dark.primary}
+        subtitle="Hardware-isolated Elliptic-Curve Diffie-Hellman key agreement protocol"
+        source={keyAgreement.source}
+      />
     </View>
   );
 };

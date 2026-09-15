@@ -13,7 +13,7 @@ import { Colors } from '../../theme/colors';
 import { HapticButton } from '../../components/HapticButton';
 import { MetricCard } from '../../components/MetricCard';
 import { SectionHeader, StatChip } from '../../components/Decor';
-import { useGeminiNano, useGenAITasks, useVisionAI, type TaskTone } from '@pixelkit-labs/sdk/mlkit';
+import { useEmbeddings, useGeminiNano, useGenAITasks, useVisionAI, type TaskTone } from '@pixelkit-labs/sdk/mlkit';
 import { styles } from './styles';
 
 type GenAITaskKind = 'summarize' | 'proofread' | 'rewrite' | 'describe';
@@ -25,6 +25,7 @@ export const TasksSection: React.FC<{
   haptics: ReturnType<typeof useHaptics>;
   signalThinking: () => void;
 }> = ({ genaiTasks, nano, vision, haptics, signalThinking }) => {
+  const embeddings = useEmbeddings();
   const [genaiKind, setGenaiKind] = useState<GenAITaskKind>('summarize');
   const [taskInputText, setTaskInputText] = useState(
     'The Google Tensor G6 in the Pixel 11 Pro runs Gemini Nano through AICore, so summarising, proofreading and rewriting all happen on the phone with no network round trip.',
@@ -62,6 +63,14 @@ export const TasksSection: React.FC<{
             badgeColor={nano.isAvailable ? Colors.dark.success : Colors.dark.warning}
             subtitle="Dedicated Task Clients for Summarization, Proofreading, Rewriting & Image Description"
             source={nano.source}
+          />
+          <MetricCard
+            title="Vector Embeddings"
+            value={embeddings.isAvailable ? `${embeddings.vectorDimension}D vectors` : 'Unavailable'}
+            badge={embeddings.isAvailable ? 'LOCAL EMBEDDER' : 'STANDBY'}
+            badgeColor={embeddings.isAvailable ? Colors.dark.success : Colors.dark.textMuted}
+            subtitle="Dense vector embeddings on-device for semantic search, retrieval and local RAG"
+            source={embeddings.source}
           />
   
           <View style={styles.taskSelector}>
