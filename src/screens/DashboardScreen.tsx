@@ -368,6 +368,12 @@ const SystemSection: React.FC<{
       <HapticButton title="Prefer 120 Hz" onPress={() => { void display.setPreferredRefreshRate(120); }} variant="secondary" style={styles.flexButtonLeft} />
       <HapticButton title="Prefer 60 Hz" onPress={() => { void display.setPreferredRefreshRate(60); }} variant="secondary" style={styles.flexButtonRight} />
     </View>
+    <HapticButton
+      title={(display as any).isHbmActive ? "High Brightness (HBM) Active · Tap to Disable" : "Boost Sunlight HBM & Peak HDR"}
+      onPress={() => { void (display as any).setHighBrightnessMode?.(!(display as any).isHbmActive); }}
+      variant={(display as any).isHbmActive ? "primary" : "secondary"}
+      style={styles.actionButton}
+    />
     <MetricCard
       title="Brightness"
       value={pct(display.brightness)}

@@ -140,6 +140,16 @@ export const AgentsSection: React.FC<{
     setTimeout(() => setFunctionFeedback(null), 2500);
   };
 
+  /** Streams a camera image / video frame into the live multimodal duplex session. */
+  const handleStreamCameraFrame = () => {
+    haptics.playPrimitives([{ primitive: 'CLICK', scale: 0.9 }]);
+    // 1x1 test JPEG base64 payload
+    const testFrameJpeg = '/9j/4AAQSkZJRgABAQEASABIAAD/2wBDAP//////////////////////////////////////////////////////////////////////////////////////wgALCAABAAEBAREA/8QAFBABAAAAAAAAAAAAAAAAAAAAAP/aAAgBAQABPxA=';
+    (live as any).sendVideoFrame?.(testFrameJpeg);
+    setFunctionFeedback('Streamed camera frame to Gemini Live');
+    setTimeout(() => setFunctionFeedback(null), 2500);
+  };
+
   /** Runs the published AppFunction for real, then reports what came back. */
   const testAppFunction = async (fn: (typeof registeredFunctions)[number]) => {
     haptics.playPrimitives([{ primitive: 'CLICK', scale: 1.0 }]);
@@ -192,6 +202,13 @@ export const AgentsSection: React.FC<{
           <HapticButton
             title="Stream Audio Chunk"
             onPress={() => { handleStreamAudioChunk(); }}
+            variant="outline"
+            style={styles.agentRunButton}
+            textStyle={{ fontSize: 11 }}
+          />
+          <HapticButton
+            title="Stream Camera Frame"
+            onPress={() => { handleStreamCameraFrame(); }}
             variant="outline"
             style={styles.agentRunButton}
             textStyle={{ fontSize: 11 }}
