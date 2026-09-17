@@ -48,5 +48,9 @@
   "useKeyAgreement.deriveSharedSecret": "derives ECDH shared secret inside hardware enclave",
   "useMicrophoneArray.setDirection": "hardware acoustic beamforming direction steering",
   "useMicrophoneArray.setFieldZoom": "acoustic field zoom focus adjustment",
-  "useThermometer.setEmissivity": "material emissivity coefficient calibration"
+  "useThermometer.setEmissivity": "material emissivity coefficient calibration",
+  "useDisplay.setPreferredDisplayMode": "lower-level display mode configuration; refresh rate buttons cover display mode switching",
+  "useDisplay.setDesiredHdrHeadroom": "fine-grained HDR headroom multiplier; covered by the HBM sunlight boost button",
+  "useGeminiLive.sendImageChunk": "low-level base64 image chunk streamer; covered by sendVideoFrame in camera stream demo",
+  "useGeminiLive.sendMultimodalTurn": "programmatic multimodal prompt dispatcher; covered by live duplex session demo"
 }
