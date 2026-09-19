@@ -4,6 +4,18 @@ All notable changes to the PixelKit Template are recorded here. The format follo
 
 **Rule:** every change to the codebase bumps the patch version by 0.0.1 (1.0.0 → 1.0.1 → 1.0.2 …) and adds an entry here in the same commit. Bump `version` in package.json and `expo.version` in app.json together, and increment `expo.android.versionCode` by 1. Minor and major bumps are decided by the maintainer, not by agents.
 
+## [1.3.11] - 2026-09-19
+
+### Changed
+- Integrated the reviewed dependency updates for Expo Network, Expo Image Picker, Expo Local Authentication, Expo Font, and `@google/genai`.
+- Bumped the app version to `1.3.11` and Android version code to `57`.
+
+### Recorded late
+
+| Commit | First shipped in | Change |
+| --- | --- | --- |
+| `53ae485` | `1.3.10` | adding the HBM sunlight toggle, Gemini Live camera frame action, and parity-waiver updates without a contemporaneous changelog entry. |
+
 ## [1.3.9] - 2026-09-15
 
 ### Changed
