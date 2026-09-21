@@ -38,7 +38,7 @@
     "expo-audio": "~57.0.5",
     "expo-battery": "~57.0.2",
     "expo-brightness": "~57.0.1",
-    "expo-build-properties": "~57.0.17",
+    "expo-build-properties": "~57.0.20",
     "expo-camera": "~57.0.4",
     "expo-cellular": "~57.0.1",
     "expo-clipboard": "~57.0.1",
